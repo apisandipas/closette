@@ -10,22 +10,9 @@ async function readCount() {
   );
 }
 
-const getCount = createServerFn({
-  method: "GET",
-}).handler(() => {
-  return readCount();
-});
-
-const updateCount = createServerFn({ method: "POST" })
-  .validator((d: number) => d)
-  .handler(async ({ data }) => {
-    const count = await readCount();
-    await fs.promises.writeFile(filePath, `${count + data}`);
-  });
-
 export const Route = createFileRoute("/")({
   component: Home,
-  loader: async () => await getCount(),
+  loader: async () => ({}),
 });
 
 function Home() {
@@ -33,15 +20,8 @@ function Home() {
   const state = Route.useLoaderData();
 
   return (
-    <button
-      type="button"
-      onClick={() => {
-        updateCount({ data: 1 }).then(() => {
-          router.invalidate();
-        });
-      }}
-    >
-      Add 1 to {state}?
-    </button>
+    <div className="bg-pink-500">
+      <h1 className="text-3xl font-bold underline">Hello World!</h1>
+    </div>
   );
 }
