@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
-import { authClient } from "@/utils/auth/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 
 const loginSchema = z.object({
   email: z.email("Enter a valid email address"),

@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
-import { authClient } from "@/utils/auth/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import { useState } from "react";
 
 const signupSchema = z
