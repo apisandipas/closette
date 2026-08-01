@@ -1,5 +1,14 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import {
+  ErrorComponent,
+  createFileRoute,
+  redirect,
+} from "@tanstack/react-router";
 import { getSession } from "@/lib/auth/functions";
+import type { ErrorComponentProps } from "@tanstack/react-router";
+
+const DashboardErrorComponent = ({ error }: ErrorComponentProps) => {
+  return <ErrorComponent error={error} />;
+};
 
 export const Route = createFileRoute("/_protected/dashboard/")({
   beforeLoad: async () => {
@@ -11,10 +20,11 @@ export const Route = createFileRoute("/_protected/dashboard/")({
 
     return { user: session.user };
   },
-  component: Dashboard,
+  errorComponent: DashboardErrorComponent,
+  component: DashboardComponent,
 });
 
-function Dashboard() {
+function DashboardComponent() {
   const { user } = Route.useRouteContext();
 
   return <div>Welcome, {user.name}!</div>;

@@ -1,14 +1,19 @@
 import type { ReactNode } from "react";
 import {
   Outlet,
-  createRootRoute,
   HeadContent,
   Scripts,
+  createRootRouteWithContext,
 } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
 import { DevTools } from "@/components/dev-tools";
+import { QueryClient } from "@tanstack/react-query";
+import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
+import { NotFound } from "@/components/not-found";
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient;
+}>()({
   head: () => ({
     meta: [
       {
@@ -24,6 +29,14 @@ export const Route = createRootRoute({
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),
+  errorComponent: (props) => {
+    return (
+      <RootDocument>
+        <DefaultCatchBoundary {...props} />
+      </RootDocument>
+    );
+  },
+  notFoundComponent: () => <NotFound />,
   component: RootComponent,
 });
 

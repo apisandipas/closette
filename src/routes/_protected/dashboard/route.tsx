@@ -7,6 +7,7 @@ export const Route = createFileRoute("/_protected/dashboard")({
 
 function RouteComponent() {
   const navigate = useNavigate();
+
   const signOut = async () => {
     await authClient.signOut();
     navigate({ to: "/login" });
@@ -20,7 +21,7 @@ function RouteComponent() {
         <div className="p-4 ml-auto">
           {session?.user && (
             <div>
-              `Welcome, ${session.user.name}`<a onClick={signOut}>Sign Out</a>
+              `Welcome, {session.user.name}`<a onClick={signOut}>Sign Out</a>
             </div>
           )}
         </div>
