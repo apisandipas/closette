@@ -27,5 +27,5 @@ export const Route = createFileRoute("/_protected/dashboard/")({
 function DashboardComponent() {
   const { user } = Route.useRouteContext();
 
-  return <div>Welcome, {user.name}!</div>;
+  return <div className="flex">Welcome, {user.name}!</div>;
 }
