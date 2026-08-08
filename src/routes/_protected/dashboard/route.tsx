@@ -22,7 +22,7 @@ function RouteComponent() {
 
   const { data: session } = authClient.useSession();
   return (
-    <div className="flex h-dvh dark:bg-gray-900 bg-gray-100 flex-col">
+    <div className="flex h-dvh dark:bg-slate-700 bg-gray-100 flex-col">
       <header className="flex w-full shadow-xl bg-background grow-0 h-14">
         <Link to="/dashboard" className="flex flex-row items-center gap-4 pl-4">
           <Rabbit /> <div className="font-heading font-bold">Closette</div>
