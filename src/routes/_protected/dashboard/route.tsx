@@ -7,6 +7,7 @@ import {
 import { authClient } from "@/lib/auth/auth-client";
 import { ThemeToggle } from "@/components/theme-switcher";
 import { LogOut, Rabbit } from "lucide-react";
+import { UserDropdown } from "@/components/dashboard/user-dropdown";
 
 export const Route = createFileRoute("/_protected/dashboard")({
   component: RouteComponent,
@@ -27,18 +28,9 @@ function RouteComponent() {
         <Link to="/dashboard" className="flex flex-row items-center gap-4 pl-4">
           <Rabbit /> <div className="font-heading font-bold">Closette</div>
         </Link>
-        <div className="flex  flex-row gap-4 ml-auto items-center pr-4">
+        <div className="flex  flex-row gap-4 ml-auto items-center justify-center pr-4">
           <ThemeToggle />
-          {session?.user && (
-            <div className="flex gap-2 flexp-row">
-              Welcome, {session.user.name}
-              <a onClick={signOut}>
-                <div className="flex gap-2 flex-row cursor-pointer">
-                  Sign Out <LogOut />
-                </div>
-              </a>
-            </div>
-          )}
+          <UserDropdown userName={session?.user?.name} />
         </div>
       </header>
       <main className="flex flex-col grow">
