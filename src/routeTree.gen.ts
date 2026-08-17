@@ -22,14 +22,15 @@ import { Route as ProtectedAdminBrandsIndexRouteImport } from './routes/_protect
 import { Route as ProtectedAdminBrandsNewRouteImport } from './routes/_protected/admin/brands/new'
 import { Route as ProtectedAdminClosetsIndexRouteImport } from './routes/_protected/admin/closets/index'
 import { Route as ProtectedAdminClosetsNewRouteImport } from './routes/_protected/admin/closets/new'
-import { Route as ProtectedAdminItemsIndexRouteImport } from './routes/_protected/admin/items/index'
-import { Route as ProtectedAdminItemsNewRouteImport } from './routes/_protected/admin/items/new'
+import { Route as ProtectedAdminItemsListRouteImport } from './routes/_protected/admin/items/_list'
 import { Route as ProtectedAdminTypesIndexRouteImport } from './routes/_protected/admin/types/index'
 import { Route as ProtectedAdminTypesNewRouteImport } from './routes/_protected/admin/types/new'
 import { Route as ProtectedAdminBrandsEditBrandIdRouteImport } from './routes/_protected/admin/brands/edit/$brandId'
 import { Route as ProtectedAdminClosetsEditClosetIdRouteImport } from './routes/_protected/admin/closets/edit/$closetId'
-import { Route as ProtectedAdminItemsItemIdEditRouteImport } from './routes/_protected/admin/items/$itemId/edit'
+import { Route as ProtectedAdminItemsListIndexRouteImport } from './routes/_protected/admin/items/_list/index'
+import { Route as ProtectedAdminItemsListNewRouteImport } from './routes/_protected/admin/items/_list/new'
 import { Route as ProtectedAdminTypesEditTypeIdRouteImport } from './routes/_protected/admin/types/edit/$typeId'
+import { Route as ProtectedAdminItemsListItemIdEditRouteImport } from './routes/_protected/admin/items/_list/$itemId/edit'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -98,15 +99,9 @@ const ProtectedAdminClosetsNewRoute =
     path: '/closets/new',
     getParentRoute: () => ProtectedAdminRouteRoute,
   } as any)
-const ProtectedAdminItemsIndexRoute =
-  ProtectedAdminItemsIndexRouteImport.update({
-    id: '/items/',
-    path: '/items/',
-    getParentRoute: () => ProtectedAdminRouteRoute,
-  } as any)
-const ProtectedAdminItemsNewRoute = ProtectedAdminItemsNewRouteImport.update({
-  id: '/items/new',
-  path: '/items/new',
+const ProtectedAdminItemsListRoute = ProtectedAdminItemsListRouteImport.update({
+  id: '/items/_list',
+  path: '/items',
   getParentRoute: () => ProtectedAdminRouteRoute,
 } as any)
 const ProtectedAdminTypesIndexRoute =
@@ -132,17 +127,29 @@ const ProtectedAdminClosetsEditClosetIdRoute =
     path: '/closets/edit/$closetId',
     getParentRoute: () => ProtectedAdminRouteRoute,
   } as any)
-const ProtectedAdminItemsItemIdEditRoute =
-  ProtectedAdminItemsItemIdEditRouteImport.update({
-    id: '/items/$itemId/edit',
-    path: '/items/$itemId/edit',
-    getParentRoute: () => ProtectedAdminRouteRoute,
+const ProtectedAdminItemsListIndexRoute =
+  ProtectedAdminItemsListIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => ProtectedAdminItemsListRoute,
+  } as any)
+const ProtectedAdminItemsListNewRoute =
+  ProtectedAdminItemsListNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => ProtectedAdminItemsListRoute,
   } as any)
 const ProtectedAdminTypesEditTypeIdRoute =
   ProtectedAdminTypesEditTypeIdRouteImport.update({
     id: '/types/edit/$typeId',
     path: '/types/edit/$typeId',
     getParentRoute: () => ProtectedAdminRouteRoute,
+  } as any)
+const ProtectedAdminItemsListItemIdEditRoute =
+  ProtectedAdminItemsListItemIdEditRouteImport.update({
+    id: '/$itemId/edit',
+    path: '/$itemId/edit',
+    getParentRoute: () => ProtectedAdminItemsListRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -156,16 +163,17 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof ProtectedDashboardIndexRoute
   '/admin/brands/new': typeof ProtectedAdminBrandsNewRoute
   '/admin/closets/new': typeof ProtectedAdminClosetsNewRoute
-  '/admin/items/new': typeof ProtectedAdminItemsNewRoute
+  '/admin/items': typeof ProtectedAdminItemsListRouteWithChildren
   '/admin/types/new': typeof ProtectedAdminTypesNewRoute
   '/admin/brands/': typeof ProtectedAdminBrandsIndexRoute
   '/admin/closets/': typeof ProtectedAdminClosetsIndexRoute
-  '/admin/items/': typeof ProtectedAdminItemsIndexRoute
   '/admin/types/': typeof ProtectedAdminTypesIndexRoute
   '/admin/brands/edit/$brandId': typeof ProtectedAdminBrandsEditBrandIdRoute
   '/admin/closets/edit/$closetId': typeof ProtectedAdminClosetsEditClosetIdRoute
-  '/admin/items/$itemId/edit': typeof ProtectedAdminItemsItemIdEditRoute
+  '/admin/items/new': typeof ProtectedAdminItemsListNewRoute
   '/admin/types/edit/$typeId': typeof ProtectedAdminTypesEditTypeIdRoute
+  '/admin/items/': typeof ProtectedAdminItemsListIndexRoute
+  '/admin/items/$itemId/edit': typeof ProtectedAdminItemsListItemIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -176,16 +184,16 @@ export interface FileRoutesByTo {
   '/dashboard': typeof ProtectedDashboardIndexRoute
   '/admin/brands/new': typeof ProtectedAdminBrandsNewRoute
   '/admin/closets/new': typeof ProtectedAdminClosetsNewRoute
-  '/admin/items/new': typeof ProtectedAdminItemsNewRoute
   '/admin/types/new': typeof ProtectedAdminTypesNewRoute
   '/admin/brands': typeof ProtectedAdminBrandsIndexRoute
   '/admin/closets': typeof ProtectedAdminClosetsIndexRoute
-  '/admin/items': typeof ProtectedAdminItemsIndexRoute
   '/admin/types': typeof ProtectedAdminTypesIndexRoute
   '/admin/brands/edit/$brandId': typeof ProtectedAdminBrandsEditBrandIdRoute
   '/admin/closets/edit/$closetId': typeof ProtectedAdminClosetsEditClosetIdRoute
-  '/admin/items/$itemId/edit': typeof ProtectedAdminItemsItemIdEditRoute
+  '/admin/items/new': typeof ProtectedAdminItemsListNewRoute
   '/admin/types/edit/$typeId': typeof ProtectedAdminTypesEditTypeIdRoute
+  '/admin/items': typeof ProtectedAdminItemsListIndexRoute
+  '/admin/items/$itemId/edit': typeof ProtectedAdminItemsListItemIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -200,16 +208,17 @@ export interface FileRoutesById {
   '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
   '/_protected/admin/brands/new': typeof ProtectedAdminBrandsNewRoute
   '/_protected/admin/closets/new': typeof ProtectedAdminClosetsNewRoute
-  '/_protected/admin/items/new': typeof ProtectedAdminItemsNewRoute
+  '/_protected/admin/items/_list': typeof ProtectedAdminItemsListRouteWithChildren
   '/_protected/admin/types/new': typeof ProtectedAdminTypesNewRoute
   '/_protected/admin/brands/': typeof ProtectedAdminBrandsIndexRoute
   '/_protected/admin/closets/': typeof ProtectedAdminClosetsIndexRoute
-  '/_protected/admin/items/': typeof ProtectedAdminItemsIndexRoute
   '/_protected/admin/types/': typeof ProtectedAdminTypesIndexRoute
   '/_protected/admin/brands/edit/$brandId': typeof ProtectedAdminBrandsEditBrandIdRoute
   '/_protected/admin/closets/edit/$closetId': typeof ProtectedAdminClosetsEditClosetIdRoute
-  '/_protected/admin/items/$itemId/edit': typeof ProtectedAdminItemsItemIdEditRoute
+  '/_protected/admin/items/_list/new': typeof ProtectedAdminItemsListNewRoute
   '/_protected/admin/types/edit/$typeId': typeof ProtectedAdminTypesEditTypeIdRoute
+  '/_protected/admin/items/_list/': typeof ProtectedAdminItemsListIndexRoute
+  '/_protected/admin/items/_list/$itemId/edit': typeof ProtectedAdminItemsListItemIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -224,16 +233,17 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/admin/brands/new'
     | '/admin/closets/new'
-    | '/admin/items/new'
+    | '/admin/items'
     | '/admin/types/new'
     | '/admin/brands/'
     | '/admin/closets/'
-    | '/admin/items/'
     | '/admin/types/'
     | '/admin/brands/edit/$brandId'
     | '/admin/closets/edit/$closetId'
-    | '/admin/items/$itemId/edit'
+    | '/admin/items/new'
     | '/admin/types/edit/$typeId'
+    | '/admin/items/'
+    | '/admin/items/$itemId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -244,16 +254,16 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/admin/brands/new'
     | '/admin/closets/new'
-    | '/admin/items/new'
     | '/admin/types/new'
     | '/admin/brands'
     | '/admin/closets'
-    | '/admin/items'
     | '/admin/types'
     | '/admin/brands/edit/$brandId'
     | '/admin/closets/edit/$closetId'
-    | '/admin/items/$itemId/edit'
+    | '/admin/items/new'
     | '/admin/types/edit/$typeId'
+    | '/admin/items'
+    | '/admin/items/$itemId/edit'
   id:
     | '__root__'
     | '/'
@@ -267,16 +277,17 @@ export interface FileRouteTypes {
     | '/_protected/dashboard/'
     | '/_protected/admin/brands/new'
     | '/_protected/admin/closets/new'
-    | '/_protected/admin/items/new'
+    | '/_protected/admin/items/_list'
     | '/_protected/admin/types/new'
     | '/_protected/admin/brands/'
     | '/_protected/admin/closets/'
-    | '/_protected/admin/items/'
     | '/_protected/admin/types/'
     | '/_protected/admin/brands/edit/$brandId'
     | '/_protected/admin/closets/edit/$closetId'
-    | '/_protected/admin/items/$itemId/edit'
+    | '/_protected/admin/items/_list/new'
     | '/_protected/admin/types/edit/$typeId'
+    | '/_protected/admin/items/_list/'
+    | '/_protected/admin/items/_list/$itemId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -380,18 +391,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedAdminClosetsNewRouteImport
       parentRoute: typeof ProtectedAdminRouteRoute
     }
-    '/_protected/admin/items/': {
-      id: '/_protected/admin/items/'
+    '/_protected/admin/items/_list': {
+      id: '/_protected/admin/items/_list'
       path: '/items'
-      fullPath: '/admin/items/'
-      preLoaderRoute: typeof ProtectedAdminItemsIndexRouteImport
-      parentRoute: typeof ProtectedAdminRouteRoute
-    }
-    '/_protected/admin/items/new': {
-      id: '/_protected/admin/items/new'
-      path: '/items/new'
-      fullPath: '/admin/items/new'
-      preLoaderRoute: typeof ProtectedAdminItemsNewRouteImport
+      fullPath: '/admin/items'
+      preLoaderRoute: typeof ProtectedAdminItemsListRouteImport
       parentRoute: typeof ProtectedAdminRouteRoute
     }
     '/_protected/admin/types/': {
@@ -422,12 +426,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedAdminClosetsEditClosetIdRouteImport
       parentRoute: typeof ProtectedAdminRouteRoute
     }
-    '/_protected/admin/items/$itemId/edit': {
-      id: '/_protected/admin/items/$itemId/edit'
-      path: '/items/$itemId/edit'
-      fullPath: '/admin/items/$itemId/edit'
-      preLoaderRoute: typeof ProtectedAdminItemsItemIdEditRouteImport
-      parentRoute: typeof ProtectedAdminRouteRoute
+    '/_protected/admin/items/_list/': {
+      id: '/_protected/admin/items/_list/'
+      path: '/'
+      fullPath: '/admin/items/'
+      preLoaderRoute: typeof ProtectedAdminItemsListIndexRouteImport
+      parentRoute: typeof ProtectedAdminItemsListRoute
+    }
+    '/_protected/admin/items/_list/new': {
+      id: '/_protected/admin/items/_list/new'
+      path: '/new'
+      fullPath: '/admin/items/new'
+      preLoaderRoute: typeof ProtectedAdminItemsListNewRouteImport
+      parentRoute: typeof ProtectedAdminItemsListRoute
     }
     '/_protected/admin/types/edit/$typeId': {
       id: '/_protected/admin/types/edit/$typeId'
@@ -436,22 +447,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedAdminTypesEditTypeIdRouteImport
       parentRoute: typeof ProtectedAdminRouteRoute
     }
+    '/_protected/admin/items/_list/$itemId/edit': {
+      id: '/_protected/admin/items/_list/$itemId/edit'
+      path: '/$itemId/edit'
+      fullPath: '/admin/items/$itemId/edit'
+      preLoaderRoute: typeof ProtectedAdminItemsListItemIdEditRouteImport
+      parentRoute: typeof ProtectedAdminItemsListRoute
+    }
   }
 }
+
+interface ProtectedAdminItemsListRouteChildren {
+  ProtectedAdminItemsListNewRoute: typeof ProtectedAdminItemsListNewRoute
+  ProtectedAdminItemsListIndexRoute: typeof ProtectedAdminItemsListIndexRoute
+  ProtectedAdminItemsListItemIdEditRoute: typeof ProtectedAdminItemsListItemIdEditRoute
+}
+
+const ProtectedAdminItemsListRouteChildren: ProtectedAdminItemsListRouteChildren =
+  {
+    ProtectedAdminItemsListNewRoute: ProtectedAdminItemsListNewRoute,
+    ProtectedAdminItemsListIndexRoute: ProtectedAdminItemsListIndexRoute,
+    ProtectedAdminItemsListItemIdEditRoute:
+      ProtectedAdminItemsListItemIdEditRoute,
+  }
+
+const ProtectedAdminItemsListRouteWithChildren =
+  ProtectedAdminItemsListRoute._addFileChildren(
+    ProtectedAdminItemsListRouteChildren,
+  )
 
 interface ProtectedAdminRouteRouteChildren {
   ProtectedAdminIndexRoute: typeof ProtectedAdminIndexRoute
   ProtectedAdminBrandsNewRoute: typeof ProtectedAdminBrandsNewRoute
   ProtectedAdminClosetsNewRoute: typeof ProtectedAdminClosetsNewRoute
-  ProtectedAdminItemsNewRoute: typeof ProtectedAdminItemsNewRoute
+  ProtectedAdminItemsListRoute: typeof ProtectedAdminItemsListRouteWithChildren
   ProtectedAdminTypesNewRoute: typeof ProtectedAdminTypesNewRoute
   ProtectedAdminBrandsIndexRoute: typeof ProtectedAdminBrandsIndexRoute
   ProtectedAdminClosetsIndexRoute: typeof ProtectedAdminClosetsIndexRoute
-  ProtectedAdminItemsIndexRoute: typeof ProtectedAdminItemsIndexRoute
   ProtectedAdminTypesIndexRoute: typeof ProtectedAdminTypesIndexRoute
   ProtectedAdminBrandsEditBrandIdRoute: typeof ProtectedAdminBrandsEditBrandIdRoute
   ProtectedAdminClosetsEditClosetIdRoute: typeof ProtectedAdminClosetsEditClosetIdRoute
-  ProtectedAdminItemsItemIdEditRoute: typeof ProtectedAdminItemsItemIdEditRoute
   ProtectedAdminTypesEditTypeIdRoute: typeof ProtectedAdminTypesEditTypeIdRoute
 }
 
@@ -459,16 +494,14 @@ const ProtectedAdminRouteRouteChildren: ProtectedAdminRouteRouteChildren = {
   ProtectedAdminIndexRoute: ProtectedAdminIndexRoute,
   ProtectedAdminBrandsNewRoute: ProtectedAdminBrandsNewRoute,
   ProtectedAdminClosetsNewRoute: ProtectedAdminClosetsNewRoute,
-  ProtectedAdminItemsNewRoute: ProtectedAdminItemsNewRoute,
+  ProtectedAdminItemsListRoute: ProtectedAdminItemsListRouteWithChildren,
   ProtectedAdminTypesNewRoute: ProtectedAdminTypesNewRoute,
   ProtectedAdminBrandsIndexRoute: ProtectedAdminBrandsIndexRoute,
   ProtectedAdminClosetsIndexRoute: ProtectedAdminClosetsIndexRoute,
-  ProtectedAdminItemsIndexRoute: ProtectedAdminItemsIndexRoute,
   ProtectedAdminTypesIndexRoute: ProtectedAdminTypesIndexRoute,
   ProtectedAdminBrandsEditBrandIdRoute: ProtectedAdminBrandsEditBrandIdRoute,
   ProtectedAdminClosetsEditClosetIdRoute:
     ProtectedAdminClosetsEditClosetIdRoute,
-  ProtectedAdminItemsItemIdEditRoute: ProtectedAdminItemsItemIdEditRoute,
   ProtectedAdminTypesEditTypeIdRoute: ProtectedAdminTypesEditTypeIdRoute,
 }
 

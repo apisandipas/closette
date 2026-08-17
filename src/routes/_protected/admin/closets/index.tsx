@@ -1,4 +1,3 @@
-import AdminListView from "@/components/admin/closets/closets-list-view";
 import NewButton from "@/components/admin/new-button";
 import PageContainer from "@/components/layout/page-container";
 import { createFileRoute, Link } from "@tanstack/react-router";

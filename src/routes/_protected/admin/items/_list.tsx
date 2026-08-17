@@ -1,12 +1,16 @@
-import { ItemsListItem } from "@/components/admin/items/item-list-view";
 import NewButton from "@/components/admin/new-button";
 import PageContainer from "@/components/layout/page-container";
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 
-export const Route = createFileRoute("/_protected/admin/items/")({
+export const Route = createFileRoute("/_protected/admin/items/_list")({
   component: RouteComponent,
 });
+
+export type ItemsListItem = {
+  id: string;
+  name: string;
+};
 
 const itemsList: ItemsListItem[] = [
   {
