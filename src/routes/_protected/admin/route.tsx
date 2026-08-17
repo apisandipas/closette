@@ -1,11 +1,4 @@
-import {
-  createFileRoute,
-  Link,
-  Outlet,
-  useNavigate,
-} from "@tanstack/react-router";
-import { authClient } from "@/lib/auth/auth-client";
-import { UserDropdown } from "@/components/dashboard/user-dropdown";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import Sidebar from "@/components/admin/sidebar";
 
 export const Route = createFileRoute("/_protected/admin")({

@@ -33,14 +33,6 @@ export default function ItemsListView({ title, items }: ClosetsListViewProps) {
             </li>
           );
         })}
-
-        {items.map(({ name }) => {
-          return (
-            <li key={name} className="p-6">
-              {name}
-            </li>
-          );
-        })}
       </ul>
     </section>
   );

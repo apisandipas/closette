@@ -11,15 +11,6 @@ const DashboardErrorComponent = ({ error }: ErrorComponentProps) => {
 };
 
 export const Route = createFileRoute("/_protected/dashboard/")({
-  beforeLoad: async () => {
-    const session = await getSession();
-
-    if (!session) {
-      throw redirect({ to: "/login" });
-    }
-
-    return { user: session.user };
-  },
   errorComponent: DashboardErrorComponent,
   component: DashboardComponent,
 });

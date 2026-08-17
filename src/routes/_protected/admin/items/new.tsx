@@ -1,9 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router'
+import PageContainer from "@/components/layout/page-container";
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/_protected/admin/items/new')({
+export const Route = createFileRoute("/_protected/admin/items/new")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
-  return <div>Hello "/_protected/admin/items/new"!</div>
+  return <PageContainer pageTitle="Create Item">Items - New</PageContainer>;
 }

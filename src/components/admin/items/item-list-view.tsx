@@ -1,3 +1,4 @@
+import PageContainer from "@/components/layout/page-container";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Plus } from "lucide-react";
 
@@ -13,16 +14,17 @@ export type ItemsListViewProps = {
 
 export default function AdminListView({ title, items }: ItemsListViewProps) {
   return (
-    <section className="flex flex-col">
-      <div className="flex items-center mb-6">
-        <h1 className="font-sans font-bold text-4xl">{title}</h1>
+    <PageContainer
+      pageTitle="Items"
+      pageHeaderAction={
         <Link
           to={"/admin/items/new"}
-          className="flex gap-2 bg-primary ml-auto p-3 rounded-lg text-white"
+          className="flex gap-2 bg-primary p-3 rounded-lg text-white"
         >
           <Plus /> New
         </Link>
-      </div>
+      }
+    >
       <ul className="border border-gray-500 divide-y divide-gray-500 list-none">
         {items.map(({ name, id }) => {
           return (
@@ -40,15 +42,7 @@ export default function AdminListView({ title, items }: ItemsListViewProps) {
             </li>
           );
         })}
-
-        {items.map(({ name }) => {
-          return (
-            <li key={name} className="p-6">
-              {name}
-            </li>
-          );
-        })}
       </ul>
-    </section>
+    </PageContainer>
   );
 }
