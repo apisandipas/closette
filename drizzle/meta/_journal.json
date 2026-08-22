@@ -8,6 +8,13 @@
       "when": 1785002759231,
       "tag": "0000_common_kang",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1787428311350,
+      "tag": "0001_safe_wraith",
+      "breakpoints": true
     }
   ]
 }

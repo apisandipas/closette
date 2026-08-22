@@ -1,23 +1,18 @@
 import NewButton from "@/components/admin/new-button";
 import PageContainer from "@/components/layout/page-container";
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { itemsQueryOptions } from "@/features/items/api/queries";
+import { itemsSearchSchema } from "@/features/items/api/types";
+import ItemsListPage from "@/features/items/components/items-listing";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
 
 export const Route = createFileRoute("/_protected/admin/items/_list")({
+  validateSearch: zodValidator(itemsSearchSchema),
+  loaderDeps: ({ search }) => search,
+  loader: ({ deps, context }) =>
+    context.queryClient.ensureQueryData(itemsQueryOptions(deps)),
   component: RouteComponent,
 });
-
-export type ItemsListItem = {
-  id: string;
-  name: string;
-};
-
-const itemsList: ItemsListItem[] = [
-  {
-    id: "123",
-    name: "Too Cool Teen Skipper",
-  },
-];
 
 function RouteComponent() {
   return (
@@ -25,24 +20,7 @@ function RouteComponent() {
       pageTitle="Items"
       pageHeaderAction={<NewButton to={"/admin/items/new"} />}
     >
-      <ul className="border border-gray-500 divide-y divide-gray-500 list-none">
-        {itemsList.map(({ name, id }) => {
-          return (
-            <li key={name}>
-              <Link
-                className="flex items-center p-6"
-                to={"/admin/items/$itemId/edit"}
-                params={{ itemId: id }}
-              >
-                {name}
-                <div className="ml-auto">
-                  <ArrowRight />
-                </div>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+      <ItemsListPage />
       <Outlet />
     </PageContainer>
   );

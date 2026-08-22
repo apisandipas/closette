@@ -4,10 +4,10 @@ import { cn } from "@/lib/utils";
 
 export type ItemFormValues = {
   name: string;
-  brand: string;
-  type: string;
-  color: string;
-  size: string;
+  brand?: string;
+  type?: string;
+  quantity: number;
+  year: string;
   notes: string;
 };
 
@@ -15,8 +15,8 @@ const EMPTY: ItemFormValues = {
   name: "",
   brand: "",
   type: "",
-  color: "",
-  size: "",
+  quantity: 0,
+  year: "",
   notes: "",
 };
 
@@ -86,37 +86,27 @@ export default function ItemForm({
 
       <div className="gap-4 grid grid-cols-2">
         <Field>
-          <FieldLabel htmlFor={id("color")}>Color</FieldLabel>
+          <FieldLabel htmlFor={id("quanity")}>Quanity</FieldLabel>
           <Input
-            id={id("color")}
-            name="color"
-            defaultValue={values.color}
-            placeholder="Sunset pink"
+            id={id("quanity")}
+            type="number"
+            name="quanity"
+            defaultValue={values.quantity}
+            placeholder="0"
           />
         </Field>
 
         <Field>
-          <FieldLabel htmlFor={id("size")}>Size</FieldLabel>
+          <FieldLabel htmlFor={id("year")}>Year</FieldLabel>
           <Input
-            id={id("size")}
-            name="size"
-            defaultValue={values.size}
-            placeholder="M"
+            id={id("year")}
+            type="year"
+            name="year"
+            defaultValue={values.year}
+            placeholder="1959"
           />
         </Field>
       </div>
-
-      <Field>
-        <FieldLabel htmlFor={id("notes")}>Notes</FieldLabel>
-        <textarea
-          id={id("notes")}
-          name="notes"
-          rows={3}
-          defaultValue={values.notes}
-          placeholder="Anything worth remembering about this piece."
-          className={cn(controlClass, "h-auto rounded-2xl py-2 resize-none")}
-        />
-      </Field>
     </FieldGroup>
   );
 }

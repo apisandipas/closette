@@ -1,4 +1,5 @@
 import ItemFormModal from "@/components/admin/items/item-form-modal";
+import type { ItemFormValues } from "@/components/admin/items/item-form";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
@@ -8,12 +9,12 @@ export const Route = createFileRoute(
 });
 
 // Mocked until the item loader lands.
-const MOCK_ITEM = {
+const MOCK_ITEM: ItemFormValues = {
   name: "Too Cool Teen Skipper",
   brand: "Mattel",
   type: "Dress",
-  color: "Sunset pink",
-  size: "M",
+  quantity: 1,
+  year: "1971",
   notes: "",
 };
 
