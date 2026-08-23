@@ -1,44 +1,57 @@
-import { Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
-
-export type ItemsTableRow = {
-  id: string;
-  name: string;
-  quantity: number;
-  brand?: { name: string } | null;
-  type?: { name: string } | null;
-};
+import DataTable, {
+  createDataTableColumnHelper,
+  type DataTablePagination,
+  type DataTableSearch,
+} from "@/components/ui/data-table";
+import { useNavigate } from "@tanstack/react-router";
+import type { ItemWithRelations } from "../api/types";
 
 export type ItemsTableProps = {
-  items: ItemsTableRow[];
+  items: Array<ItemWithRelations>;
+  pagination: DataTablePagination;
+  search: DataTableSearch;
 };
 
-function ItemsTable({ items }: ItemsTableProps) {
+const columnHelper = createDataTableColumnHelper<ItemWithRelations>();
+
+// Accessors return "" for missing relations so sorting stays string-safe;
+// DataTable renders empty values as N/A.
+const columns = columnHelper.columns([
+  columnHelper.accessor("name", { header: "Name" }),
+  columnHelper.accessor((row) => row.brand?.name ?? "", {
+    id: "brand",
+    header: "Brand",
+  }),
+  columnHelper.accessor((row) => row.type?.name ?? "", {
+    id: "type",
+    header: "Type",
+  }),
+  columnHelper.accessor((row) => row.closet?.name ?? "", {
+    id: "closet",
+    header: "Closet",
+  }),
+  columnHelper.accessor("year", { header: "Year" }),
+  columnHelper.accessor("quantity", { header: "Quantity" }),
+]);
+
+function ItemsTable({ items, pagination, search }: ItemsTableProps) {
+  const navigate = useNavigate();
+
   return (
-    <ul className="border border-gray-500 divide-y divide-gray-500 list-none">
-      {items.map(({ id, name, brand, type, quantity }) => {
-        return (
-          <li key={id}>
-            <Link
-              className="flex items-center p-7"
-              to={"/admin/items/$itemId/edit"}
-              params={{ itemId: id }}
-            >
-              <div>
-                <div>{name}</div>
-                <div className="text-gray-500 text-sm">
-                  {[brand?.name, type?.name].filter(Boolean).join(" · ")}
-                </div>
-              </div>
-              <div className="flex items-center gap-4 ml-auto">
-                {quantity > 1 && <span>&times;{quantity}</span>}
-                <ArrowRight />
-              </div>
-            </Link>
-          </li>
-        );
-      })}
-    </ul>
+    <DataTable
+      data={items}
+      columns={columns}
+      openRow={(item) =>
+        navigate({
+          to: "/admin/items/$itemId/edit",
+          params: { itemId: item.id },
+        })
+      }
+      pagination={pagination}
+      search={search}
+      searchPlaceholder="Search items..."
+      emptyMessage="No items yet."
+    />
   );
 }
 

@@ -22,6 +22,13 @@
       "when": 1787434372696,
       "tag": "0002_add_item_user_id",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1787486437451,
+      "tag": "0003_nebulous_invisible_woman",
+      "breakpoints": true
     }
   ]
 }

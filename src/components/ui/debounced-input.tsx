@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
-import { Input } from "./ui/input"
+import { Input } from "./input"
 
 function DebouncedInput({
   value: initialValue,

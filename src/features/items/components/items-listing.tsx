@@ -9,20 +9,33 @@ const route = getRouteApi("/_protected/admin/items/_list");
 
 function ItemsListPage() {
   const search = route.useSearch();
+  const navigate = route.useNavigate();
   const { data } = useSuspenseQuery(itemsQueryOptions(search));
 
-  if (data.items.length === 0) {
-    return (
-      <p className="p-7 border border-gray-500 text-center text-gray-500">
-        No items yet.
-      </p>
-    );
-  }
-
+  // Paging and search live in the URL, so getItems does the work server-side
+  // and the table stays a view over one page of rows.
   return (
-    <ul className="border border-gray-500 divide-y divide-gray-500 list-none">
-     <ItemsTable items={data.items} /> 
-    </ul>
+    <ItemsTable
+      items={data.items}
+      pagination={{
+        page: data.page,
+        pageCount: data.pageCount,
+        onPageChange: (page) =>
+          navigate({ search: (prev) => ({ ...prev, page }) }),
+      }}
+      search={{
+        value: search.search ?? "",
+        onChange: (value) =>
+          // Back to page 1: the old page number rarely exists in the new results.
+          navigate({
+            search: (prev) => ({
+              ...prev,
+              search: value || undefined,
+              page: 1,
+            }),
+          }),
+      }}
+    />
   );
 }
 
