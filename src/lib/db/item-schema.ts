@@ -36,6 +36,9 @@ export const item = pgTable(
   "items",
   {
     id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
     image: text("image"),
     year: integer("year").default(1959).notNull(),
@@ -58,6 +61,7 @@ export const item = pgTable(
       .notNull(),
   },
   (table) => [
+    index("items_userId_idx").on(table.userId),
     index("items_closetId_idx").on(table.closetId),
     index("items_typeId_idx").on(table.typeId),
     index("items_brandId_idx").on(table.brandId),
@@ -73,6 +77,10 @@ export const closetRelations = relations(closet, ({ one, many }) => ({
 }));
 
 export const itemRelations = relations(item, ({ one }) => ({
+  user: one(user, {
+    fields: [item.userId],
+    references: [user.id],
+  }),
   closet: one(closet, {
     fields: [item.closetId],
     references: [closet.id],
