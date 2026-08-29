@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getItems } from "./service";
+import { getItems, getItem, getItemFormOptions } from "./service";
 import type { ItemFilters } from "./types";
 
 export const itemKeys = {
@@ -13,3 +13,14 @@ export const itemsQueryOptions = (filters: ItemFilters) =>
     queryKey: itemKeys.list(filters),
     queryFn: () => getItems({ data: filters }),
   });
+
+export const itemQueryOptions = (id: string) =>
+  queryOptions({
+    queryKey: itemKeys.details(id),
+    queryFn: () => getItem({ data: { id } })
+  })
+
+export const itemFormOptionsOptions = () => queryOptions({
+  queryKey: ['itemFormOptions'],
+  queryFn: () => getItemFormOptions()
+})

@@ -19,3 +19,5 @@ export const itemsSearchSchema = z.object({
 });
 
 export type ItemFilters = z.infer<typeof itemsSearchSchema>;
+
+export const getItemSchema = z.object({ id: z.string() })

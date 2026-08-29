@@ -9,7 +9,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useNavigate } from "@tanstack/react-router";
+import { getRouteApi, useNavigate } from "@tanstack/react-router";
+import { StringLiteral } from "typescript";
+import { string } from "zod";
+
+export type SelectDataItem = {
+  name: string;
+  id: string;
+}
 
 export type ItemFormModalProps = {
   title: string;
@@ -17,7 +24,10 @@ export type ItemFormModalProps = {
   submitLabel: string;
   idPrefix: string;
   values?: ItemFormValues;
+  brands: SelectDataItem[],
+  types: SelectDataItem[]
 };
+
 
 /**
  * Route-driven modal: it is open for as long as its route is matched, and any
@@ -29,6 +39,8 @@ export default function ItemFormModal({
   submitLabel,
   idPrefix,
   values,
+  brands,
+  types,
 }: ItemFormModalProps) {
   const navigate = useNavigate();
   const close = () => navigate({ to: "/admin/items" });
@@ -48,7 +60,7 @@ export default function ItemFormModal({
             close();
           }}
         >
-          <ItemForm idPrefix={idPrefix} values={values} />
+          <ItemForm idPrefix={idPrefix} values={values} brands={brands} types={types} />
           <DialogFooter>
             <DialogClose
               render={

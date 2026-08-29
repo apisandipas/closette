@@ -1,14 +1,14 @@
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { SelectDataItem } from "./item-form-modal";
 
 export type ItemFormValues = {
   name: string;
   brand?: string;
   type?: string;
   quantity: number;
-  year: string;
-  notes: string;
+  year: number;
 };
 
 const EMPTY: ItemFormValues = {
@@ -16,22 +16,20 @@ const EMPTY: ItemFormValues = {
   brand: "",
   type: "",
   quantity: 0,
-  year: "",
-  notes: "",
+  year: 1959,
 };
-
-// Mocked options — swap for real brand/type queries once the loaders exist.
-const BRANDS = ["Mattel", "Hasbro", "Tonner", "Integrity Toys"];
-const TYPES = ["Dress", "Top", "Bottom", "Outerwear", "Shoes", "Accessory"];
 
 const controlClass =
   "h-9 w-full min-w-0 rounded-3xl border border-transparent bg-input/50 px-3 py-1 text-base outline-none transition-[color,box-shadow,background-color] focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30 md:text-sm";
 
 export default function ItemForm({
   values = EMPTY,
+  brands, types,
   idPrefix,
 }: {
   values?: ItemFormValues;
+  brands: SelectDataItem[];
+  types: SelectDataItem[];
   idPrefix: string;
 }) {
   const id = (field: string) => `${idPrefix}-${field}`;
@@ -58,9 +56,9 @@ export default function ItemForm({
             className={cn(controlClass)}
           >
             <option value="">Select a brand</option>
-            {BRANDS.map((brand) => (
-              <option key={brand} value={brand}>
-                {brand}
+            {brands.map(({ id, name }) => (
+              <option key={id} value={id}>
+                {name}
               </option>
             ))}
           </select>
@@ -75,9 +73,9 @@ export default function ItemForm({
             className={cn(controlClass)}
           >
             <option value="">Select a type</option>
-            {TYPES.map((type) => (
-              <option key={type} value={type}>
-                {type}
+            {types.map(({ name, id }) => (
+              <option key={id} value={id}>
+                {name}
               </option>
             ))}
           </select>
@@ -107,6 +105,6 @@ export default function ItemForm({
           />
         </Field>
       </div>
-    </FieldGroup>
+    </FieldGroup >
   );
 }

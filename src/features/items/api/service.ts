@@ -1,17 +1,15 @@
 import { db } from "@/lib/db";
-import { item } from "@/lib/db/schema";
+import { brand, item, itemType } from "@/lib/db/schema";
 import { ensureSession } from "@/lib/auth/functions";
 import { createServerFn } from "@tanstack/react-start";
 import { and, asc, count, desc, eq, ilike } from "drizzle-orm";
-import { itemsSearchSchema } from "./types";
+import { getItemSchema, itemsSearchSchema } from "./types";
 
 export const getItems = createServerFn({ method: "GET" })
   .validator(itemsSearchSchema)
   .handler(async ({ data: { page, limit, search, sort } }) => {
     const { user } = await ensureSession();
 
-    // Ownership lives on the item, so an item needs no closet to show up.
-    // userId comes from the session, never from anything the client sent.
     const where = and(
       eq(item.userId, user.id),
       search ? ilike(item.name, `%${search}%`) : undefined,
@@ -38,3 +36,36 @@ export const getItems = createServerFn({ method: "GET" })
       pageCount: Math.max(1, Math.ceil(total / limit)),
     };
   });
+
+
+export const getItem = createServerFn({ method: "GET" })
+  .validator(getItemSchema)
+  .handler(async ({ data: { id } }) => {
+    const { user } = await ensureSession();
+
+    const where = and(eq(item.id, id), eq(item.userId, user.id));
+
+    const theItem = await db.query.item.findFirst({ where })
+
+    return { item: theItem };
+  });
+
+export const getItemFormOptions = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    const { user } = await ensureSession()
+
+    const [brands, types] = await Promise.all([
+      db.query.brand.findMany({
+        where: eq(brand.userId, user.id),
+        columns: { id: true, name: true },
+        orderBy: asc(brand.name),
+      }),
+      db.query.itemType.findMany({
+        where: eq(itemType.userId, user.id),
+        columns: { id: true, name: true },
+        orderBy: asc(itemType.name),
+      })
+    ])
+
+    return { brands, types }
+  })
