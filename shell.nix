@@ -40,8 +40,18 @@ pkgs.mkShell {
       createdb -h localhost -U postgres dev_db
     fi
 
-    # Clean up and stop Postgres automatically when exiting the Nix shell
-    trap 'echo "Stopping PostgreSQL..."; pg_ctl stop -m fast' EXIT
+    # Restore from the committed dump so test data stays consistent across machines
+    DUMPFILE="$PWD/db/dev_db.sql"
+    if [ -f "$DUMPFILE" ]; then
+      echo "Restoring database from db/dev_db.sql..."
+      psql -h localhost -U postgres -d dev_db -f "$DUMPFILE" > /dev/null
+    fi
+
+    # Dump the database and stop Postgres automatically when exiting the Nix shell
+    trap 'echo "Dumping database to db/dev_db.sql..."; \
+          mkdir -p "$PWD/db"; \
+          pg_dump -h localhost -U postgres --clean --if-exists dev_db > "$PWD/db/dev_db.sql"; \
+          echo "Stopping PostgreSQL..."; pg_ctl stop -m fast' EXIT
 
     echo ""
     echo "⚡ Nix Development Environment Active ⚡"
