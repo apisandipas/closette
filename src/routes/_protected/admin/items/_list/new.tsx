@@ -1,4 +1,4 @@
-import ItemFormModal from "@/components/admin/items/item-form-modal";
+import ItemFormModal from "@/features/items/components/item-form-modal";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_protected/admin/items/_list/new")({

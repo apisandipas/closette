@@ -1,4 +1,4 @@
-import ItemForm, { type ItemFormValues } from "@/components/admin/items/item-form";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,28 +10,29 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useNavigate } from "@tanstack/react-router";
+import ClosetForm, { ClosetFormValues } from "./closet-form";
 
-export type ItemFormModalProps = {
+export type ClosetFormModalProps = {
   title: string;
   description?: string;
   submitLabel: string;
   idPrefix: string;
-  values?: ItemFormValues;
+  values?: ClosetFormValues;
 };
 
 /**
  * Route-driven modal: it is open for as long as its route is matched, and any
  * dismissal (backdrop, Escape, close button, Cancel) navigates back to the list.
  */
-export default function ItemFormModal({
+export default function ClosetFormModal({
   title,
   description,
   submitLabel,
   idPrefix,
   values,
-}: ItemFormModalProps) {
+}: ClosetFormModalProps) {
   const navigate = useNavigate();
-  const close = () => navigate({ to: "/admin/items" });
+  const close = () => navigate({ to: "/admin/closets" });
 
   return (
     <Dialog open onOpenChange={(open) => !open && close()}>
@@ -48,7 +49,7 @@ export default function ItemFormModal({
             close();
           }}
         >
-          <ItemForm idPrefix={idPrefix} values={values} />
+          <ClosetForm idPrefix={idPrefix} values={values} />
           <DialogFooter>
             <DialogClose
               render={

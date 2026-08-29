@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { getRouteApi, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { getRouteApi } from "@tanstack/react-router";
 import { itemsQueryOptions } from "../api/queries";
+import ItemsTable from "./items-table";
 
 // getRouteApi instead of importing Route, which would be a circular import:
 // the route file already imports this component.
@@ -9,41 +9,33 @@ const route = getRouteApi("/_protected/admin/items/_list");
 
 function ItemsListPage() {
   const search = route.useSearch();
+  const navigate = route.useNavigate();
   const { data } = useSuspenseQuery(itemsQueryOptions(search));
 
-  if (data.items.length === 0) {
-    return (
-      <p className="p-7 border border-gray-500 text-center text-gray-500">
-        No items yet.
-      </p>
-    );
-  }
-
+  // Paging and search live in the URL, so getItems does the work server-side
+  // and the table stays a view over one page of rows.
   return (
-    <ul className="border border-gray-500 divide-y divide-gray-500 list-none">
-      {data.items.map(({ id, name, brand, type, quantity }) => {
-        return (
-          <li key={id}>
-            <Link
-              className="flex items-center p-7"
-              to={"/admin/items/$itemId/edit"}
-              params={{ itemId: id }}
-            >
-              <div>
-                <div>{name}</div>
-                <div className="text-gray-500 text-sm">
-                  {[brand?.name, type?.name].filter(Boolean).join(" · ")}
-                </div>
-              </div>
-              <div className="flex items-center gap-4 ml-auto">
-                {quantity > 1 && <span>&times;{quantity}</span>}
-                <ArrowRight />
-              </div>
-            </Link>
-          </li>
-        );
-      })}
-    </ul>
+    <ItemsTable
+      items={data.items}
+      pagination={{
+        page: data.page,
+        pageCount: data.pageCount,
+        onPageChange: (page) =>
+          navigate({ search: (prev) => ({ ...prev, page }) }),
+      }}
+      search={{
+        value: search.search ?? "",
+        onChange: (value) =>
+          // Back to page 1: the old page number rarely exists in the new results.
+          navigate({
+            search: (prev) => ({
+              ...prev,
+              search: value || undefined,
+              page: 1,
+            }),
+          }),
+      }}
+    />
   );
 }
 

@@ -25,12 +25,36 @@ export const closet = pgTable(
 export const brand = pgTable("brands", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull().unique(),
-});
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+},
+  (table) => [index("brands_userId_idx").on(table.userId)],
+);
 
 export const itemType = pgTable("types", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull().unique(),
-});
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull()
+},
+  (table) => [index("types_userId_idx").on(table.userId)],
+);
 
 export const item = pgTable(
   "items",

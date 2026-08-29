@@ -6,7 +6,7 @@ import { and, asc, count, desc, eq, ilike } from "drizzle-orm";
 import { itemsSearchSchema } from "./types";
 
 export const getItems = createServerFn({ method: "GET" })
-  .inputValidator(itemsSearchSchema)
+  .validator(itemsSearchSchema)
   .handler(async ({ data: { page, limit, search, sort } }) => {
     const { user } = await ensureSession();
 

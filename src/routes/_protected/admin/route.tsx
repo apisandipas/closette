@@ -16,11 +16,11 @@ function RouteComponent() {
           <Link to={"/dashboard"}>Back to Dashboard</Link>
         </div>
       </header>
-      <div className="gap-6 grid grid-cols-4 m-6">
+      <div className="gap-6 grid grid-cols-5 m-6">
         <aside className="col-span-1 bg-white shadow-lg p-4 rounded-xl">
           <Sidebar />
         </aside>
-        <main className="flex flex-col col-span-3 grow">
+        <main className="flex flex-col col-span-4 grow">
           <Outlet />
         </main>
       </div>

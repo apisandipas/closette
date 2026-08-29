@@ -1,5 +1,5 @@
-import ItemFormModal from "@/components/admin/items/item-form-modal";
-import type { ItemFormValues } from "@/components/admin/items/item-form";
+import ItemFormModal from "@/features/items/components/item-form-modal";
+import type { ItemFormValues } from "@/features/items/components/item-form";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
