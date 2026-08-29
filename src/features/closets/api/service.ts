@@ -3,10 +3,10 @@ import { db } from "@/lib/db";
 import { closet } from "@/lib/db/schema";
 import { createServerFn } from "@tanstack/react-start";
 import { and, asc, count, desc, eq, ilike } from "drizzle-orm";
-import { closetSearchSchema } from "./types";
+import { searchFiltersSchema } from "@/features/common";
 
 export const getClosets = createServerFn({ method: "GET" })
-  .validator(closetSearchSchema)
+  .validator(searchFiltersSchema)
   .handler(async ({ data: { page, limit, search, sort } }) => {
     const { user } = await ensureSession();
 

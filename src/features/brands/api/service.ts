@@ -1,13 +1,12 @@
-
 import { ensureSession } from "@/lib/auth/functions";
 import { db } from "@/lib/db";
 import { brand } from "@/lib/db/schema";
 import { createServerFn } from "@tanstack/react-start";
 import { and, asc, count, desc, eq, ilike } from "drizzle-orm";
-import { brandSearchSchema } from "./types";
+import { searchFiltersSchema } from "@/features/common";
 
 export const getBrands = createServerFn({ method: "GET" })
-  .validator(brandSearchSchema)
+  .validator(searchFiltersSchema)
   .handler(async ({ data: { page, limit, search, sort } }) => {
     const { user } = await ensureSession();
 

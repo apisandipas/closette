@@ -1,14 +1,10 @@
 import { queryOptions } from "@tanstack/react-query";
 import { getTypes } from "./service";
-import type { TypeFilters } from "./types";
+import { makeKeys, type Filters } from "@/features/common";
 
-export const typeKeys = {
-  all: ["type"] as const,
-  list: (filters: TypeFilters) => [...typeKeys.all, "list", filters],
-  details: (id: string) => [...typeKeys.all, id] as const,
-};
+export const typeKeys = makeKeys("type");
 
-export const typesQueryOptions = (filters: TypeFilters) =>
+export const typesQueryOptions = (filters: Filters) =>
   queryOptions({
     queryKey: typeKeys.list(filters),
     queryFn: () => getTypes({ data: filters }),

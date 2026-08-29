@@ -1,5 +1,9 @@
 import { brand, closet, item, itemType } from "@/lib/db/schema";
-import { z } from "zod";
+import {
+  createInsertSchema,
+  createSelectSchema,
+  createUpdateSchema,
+} from "drizzle-zod";
 
 export type Item = typeof item.$inferSelect;
 export type NewItem = typeof item.$inferInsert;
@@ -11,13 +15,6 @@ export type ItemWithRelations = Item & {
   closet: typeof closet.$inferSelect | null;
 };
 
-export const itemsSearchSchema = z.object({
-  page: z.coerce.number().default(1),
-  limit: z.coerce.number().default(10),
-  search: z.string().optional(),
-  sort: z.string().optional(),
-});
-
-export type ItemFilters = z.infer<typeof itemsSearchSchema>;
-
-export const getItemSchema = z.object({ id: z.string() })
+export const insertItemSchema = createInsertSchema(item);
+export const selectItemSchema = createSelectSchema(item);
+export const updateItemSchema = createUpdateSchema(item);

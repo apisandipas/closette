@@ -1,14 +1,10 @@
 import { queryOptions } from "@tanstack/react-query";
 import { getClosets } from "./service";
-import type { ClosetFilters } from "./types";
+import { makeKeys, type Filters } from "@/features/common";
 
-export const closetKeys = {
-  all: ["closet"] as const,
-  list: (filters: ClosetFilters) => [...closetKeys.all, "list", filters],
-  details: (id: string) => [...closetKeys.all, id] as const,
-};
+export const closetKeys = makeKeys("closet");
 
-export const closetsQueryOptions = (filters: ClosetFilters) =>
+export const closetsQueryOptions = (filters: Filters) =>
   queryOptions({
     queryKey: closetKeys.list(filters),
     queryFn: () => getClosets({ data: filters }),

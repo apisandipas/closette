@@ -1,20 +1,19 @@
-
 import { db } from "@/lib/db";
-import { closet } from "@/lib/db/schema";
+import { itemType } from "@/lib/db/schema";
 import { createServerFn } from "@tanstack/react-start";
 import { and, asc, count, desc, eq, ilike } from "drizzle-orm";
-import { typeSearchSchema } from "./types";
+import { searchFiltersSchema } from "@/features/common";
 import { ensureSession } from "@/lib/auth/functions";
 
 export const getTypes = createServerFn({ method: "GET" })
-  .validator(typeSearchSchema)
+  .validator(searchFiltersSchema)
   .handler(async ({ data: { page, limit, search, sort } }) => {
     const { user } = await ensureSession();
 
     // userId comes from the session, never from anything the client sent.
     const where = and(
-      eq(closet.userId, user.id),
-      search ? ilike(closet.name, `%${search}%`) : undefined,
+      eq(itemType.userId, user.id),
+      search ? ilike(itemType.name, `%${search}%`) : undefined,
     );
 
     const [rows, totals] = await Promise.all([
@@ -24,9 +23,10 @@ export const getTypes = createServerFn({ method: "GET" })
         with: { items: { columns: { id: true } } },
         limit,
         offset: (page - 1) * limit,
-        orderBy: sort === "name" ? asc(closet.name) : desc(closet.createdAt),
+        orderBy:
+          sort === "name" ? asc(itemType.name) : desc(itemType.createdAt),
       }),
-      db.select({ value: count() }).from(closet).where(where),
+      db.select({ value: count() }).from(itemType).where(where),
     ]);
 
     const total = totals[0]?.value ?? 0;
