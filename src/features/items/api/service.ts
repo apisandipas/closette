@@ -3,7 +3,7 @@ import { brand, item, itemType, closet } from "@/lib/db/schema";
 import { ensureSession } from "@/lib/auth/functions";
 import { createServerFn } from "@tanstack/react-start";
 import { and, asc, count, desc, eq, ilike } from "drizzle-orm";
-import { selectItemSchema, insertItemSchema } from "./types";
+import { selectItemSchema, insertItemSchema, updateItemSchema } from "./types";
 import { searchFiltersSchema } from "@/features/common";
 
 export const getItems = createServerFn({ method: "GET" })
@@ -39,7 +39,7 @@ export const getItems = createServerFn({ method: "GET" })
   });
 
 export const getItem = createServerFn({ method: "GET" })
-  .validator(selectItemSchema)
+  .validator(selectItemSchema.pick({ id: true }))
   .handler(async ({ data: { id } }) => {
     const { user } = await ensureSession();
 
@@ -90,4 +90,18 @@ export const createItem = createServerFn({ method: "POST" })
       .returning();
 
     return { item: created };
+  });
+
+export const updateItem = createServerFn({ method: "POST" })
+  .validator(updateItemSchema)
+  .handler(async ({ data: { id, ...changes } }) => {
+    const { user } = await ensureSession();
+    // …same closetId/typeId/brandId ownership guards as createItem…
+    const [updated] = await db
+      .update(item)
+      .set(changes)
+      .where(and(eq(item.id, id), eq(item.userId, user.id))) // ownership in the WHERE
+      .returning();
+    if (!updated) throw new Error("Item not found");
+    return { item: updated };
   });
