@@ -239,15 +239,17 @@ function DataTable<TData extends RowData>({
                       <TableCell className="w-0 text-muted-foreground">
                         <ArrowRight className="size-4" />
                       </TableCell>
-                      <TableCell
-                        className="w-0 text-muted-foreground"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          removeRow?.(row.original);
-                        }}
-                      >
-                        <X className="size-4" />
-                      </TableCell>
+                      {removeRow && (
+                        <TableCell
+                          className="w-0 text-muted-foreground"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            removeRow?.(row.original);
+                          }}
+                        >
+                          <X className="size-4" />
+                        </TableCell>
+                      )}
                     </>
                   )}
                 </TableRow>

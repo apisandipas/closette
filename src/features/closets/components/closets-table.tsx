@@ -4,7 +4,9 @@ import DataTable, {
   type DataTableSearch,
 } from "@/components/ui/data-table";
 import { useNavigate } from "@tanstack/react-router";
-import type { ClosetWithItemCount } from "../api/types";
+import type { Closet, ClosetWithItemCount } from "../api/types";
+import { useDeleteCloset } from "../api/mutations";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 
 export type ClosetsTableProps = {
   closets: Array<ClosetWithItemCount>;
@@ -17,8 +19,6 @@ const columnHelper = createDataTableColumnHelper<ClosetWithItemCount>();
 const columns = columnHelper.columns([
   columnHelper.accessor("name", { header: "Name" }),
   columnHelper.accessor("itemCount", { header: "Items" }),
-  // Formatted in the accessor: a Date object can't be rendered as a React
-  // child, and `new Date` tolerates the string form after serialization.
   columnHelper.accessor((row) => new Date(row.createdAt).toLocaleDateString(), {
     id: "createdAt",
     header: "Created",
@@ -27,6 +27,18 @@ const columns = columnHelper.columns([
 
 function ClosetsTable({ closets, pagination, search }: ClosetsTableProps) {
   const navigate = useNavigate();
+  const confirm = useConfirm();
+  const { mutateAsync } = useDeleteCloset();
+
+  const removeRow = async (closet: Closet) => {
+    const ok = await confirm({
+      title: "Delete closet?",
+      description: `${closet.name} will be permanently removed.`,
+    });
+    if (ok) {
+      await mutateAsync({ data: { id: closet.id } });
+    }
+  };
 
   return (
     <DataTable
@@ -38,6 +50,7 @@ function ClosetsTable({ closets, pagination, search }: ClosetsTableProps) {
           params: { closetId: closet.id },
         })
       }
+      removeRow={removeRow}
       pagination={pagination}
       search={search}
       searchPlaceholder="Search closets..."

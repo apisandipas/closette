@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,14 +9,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useNavigate } from "@tanstack/react-router";
-import ClosetForm, { ClosetFormValues } from "./closet-form";
+import { ClosetFields } from "./closet-form";
+import { useAppForm } from "@/lib/form";
+import { closetFormOpts, ClosetFormValues } from "../api/form";
 
 export type ClosetFormModalProps = {
   title: string;
   description?: string;
   submitLabel: string;
-  idPrefix: string;
-  values?: ClosetFormValues;
+  defaultValues?: ClosetFormValues;
+  onSubmit: (values: ClosetFormValues) => Promise<void>;
 };
 
 /**
@@ -28,11 +29,20 @@ export default function ClosetFormModal({
   title,
   description,
   submitLabel,
-  idPrefix,
-  values,
+  defaultValues,
+  onSubmit,
 }: ClosetFormModalProps) {
   const navigate = useNavigate();
   const close = () => navigate({ to: "/admin/closets" });
+
+  const form = useAppForm({
+    ...closetFormOpts,
+    defaultValues: defaultValues ?? closetFormOpts.defaultValues,
+    onSubmit: async ({ value }) => {
+      await onSubmit(value);
+      close();
+    },
+  });
 
   return (
     <Dialog open onOpenChange={(open) => !open && close()}>
@@ -46,10 +56,10 @@ export default function ClosetFormModal({
           className="flex flex-col gap-6"
           onSubmit={(e) => {
             e.preventDefault();
-            close();
+            form.handleSubmit();
           }}
         >
-          <ClosetForm idPrefix={idPrefix} values={values} />
+          <ClosetFields form={form} />
           <DialogFooter>
             <DialogClose
               render={
@@ -58,7 +68,9 @@ export default function ClosetFormModal({
                 </Button>
               }
             />
-            <Button type="submit">{submitLabel}</Button>
+            <form.AppForm>
+              <form.SubmitButton label={submitLabel} />
+            </form.AppForm>
           </DialogFooter>
         </form>
       </DialogContent>

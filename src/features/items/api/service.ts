@@ -106,7 +106,7 @@ export const updateItem = createServerFn({ method: "POST" })
     const [updated] = await db
       .update(item)
       .set(changes)
-      .where(and(eq(item.id, id), eq(item.userId, user.id))) // ownership in the WHERE
+      .where(and(eq(item.id, id), eq(item.userId, user.id)))
       .returning();
     if (!updated) throw new Error("Item not found");
     return { item: updated };
@@ -126,7 +126,6 @@ export const deleteItem = createServerFn({ method: "POST" })
       .where(and(eq(item.id, id), eq(item.userId, user.id)))
       .returning({ id: item.id });
 
-    if (!deleteItem) throw new Error("Item not found");
-
+    if (!deleted) throw new Error("Item not found");
     return { id: deleted.id };
   });

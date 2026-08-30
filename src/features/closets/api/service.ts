@@ -4,6 +4,12 @@ import { closet } from "@/lib/db/schema";
 import { createServerFn } from "@tanstack/react-start";
 import { and, asc, count, desc, eq, ilike } from "drizzle-orm";
 import { searchFiltersSchema } from "@/features/common";
+import { z } from "zod";
+import {
+  insertClosetSchema,
+  selectClosetSchema,
+  updateClosetSchema,
+} from "./types";
 
 export const getClosets = createServerFn({ method: "GET" })
   .validator(searchFiltersSchema)
@@ -40,4 +46,64 @@ export const getClosets = createServerFn({ method: "GET" })
       limit,
       pageCount: Math.max(1, Math.ceil(total / limit)),
     };
+  });
+
+export const getCloset = createServerFn({ method: "GET" })
+  .validator(selectClosetSchema.pick({ id: true }))
+  .handler(async ({ data: { id } }) => {
+    const { user } = await ensureSession();
+
+    const where = and(eq(closet.id, id), eq(closet.userId, user.id));
+
+    const selected = await db.query.closet.findFirst({
+      where,
+    });
+    return { closet: selected };
+  });
+
+export const createCloset = createServerFn({ method: "POST" })
+  .validator(insertClosetSchema)
+  .handler(async ({ data }) => {
+    const { user } = await ensureSession();
+
+    const [created] = await db
+      .insert(closet)
+      .values({ ...data, userId: user.id })
+      .returning();
+
+    return created;
+  });
+
+export const updateCloset = createServerFn({ method: "POST" })
+  .validator(updateClosetSchema)
+  .handler(async ({ data: { id, ...changes } }) => {
+    const { user } = await ensureSession();
+
+    const [updated] = await db
+      .update(closet)
+      .set(changes)
+      .where(and(eq(closet.id, id), eq(closet.userId, user.id)))
+      .returning();
+
+    if (!updated) throw new Error("Closet not found");
+    return { closet: updated };
+  });
+
+export const deleteCloset = createServerFn({ method: "POST" })
+  .validator(
+    z.object({
+      id: z.string(),
+    }),
+  )
+  .handler(async ({ data: { id } }) => {
+    const { user } = await ensureSession();
+
+    const [deleted] = await db
+      .delete(closet)
+      .where(and(eq(closet.id, id), eq(closet.userId, user.id)))
+      .returning({
+        id: closet.id,
+      });
+    if (!deleted) throw new Error("Item not found");
+    return { id: deleted.id };
   });
