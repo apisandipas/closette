@@ -1,10 +1,12 @@
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import DataTable, {
   createDataTableColumnHelper,
   type DataTablePagination,
   type DataTableSearch,
 } from "@/components/ui/data-table";
 import { useNavigate } from "@tanstack/react-router";
-import type { BrandWithItemCount } from "../api/types";
+import { useDeleteBrand } from "../api/mutation";
+import type { Brand, BrandWithItemCount } from "../api/types";
 
 export type BrandsTableProps = {
   brands: Array<BrandWithItemCount>;
@@ -21,6 +23,18 @@ const columns = columnHelper.columns([
 
 function BrandsTable({ brands, pagination, search }: BrandsTableProps) {
   const navigate = useNavigate();
+  const confirm = useConfirm();
+  const { mutateAsync } = useDeleteBrand();
+
+  const removeRow = async (brand: Brand) => {
+    const ok = await confirm({
+      title: "Delete brand",
+      description: `${brand.name} will be permanently removed`,
+    });
+    if (ok) {
+      await mutateAsync({ data: { id: brand.id } });
+    }
+  };
 
   return (
     <DataTable
@@ -32,6 +46,7 @@ function BrandsTable({ brands, pagination, search }: BrandsTableProps) {
           params: { brandId: brand.id },
         })
       }
+      removeRow={removeRow}
       pagination={pagination}
       search={search}
       searchPlaceholder="Search closets..."

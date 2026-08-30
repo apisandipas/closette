@@ -71,7 +71,9 @@ export const createCloset = createServerFn({ method: "POST" })
       .values({ ...data, userId: user.id })
       .returning();
 
-    return created;
+    if (!created) throw new Error("Closet not created");
+
+    return { closet: created };
   });
 
 export const updateCloset = createServerFn({ method: "POST" })
@@ -86,6 +88,7 @@ export const updateCloset = createServerFn({ method: "POST" })
       .returning();
 
     if (!updated) throw new Error("Closet not found");
+
     return { closet: updated };
   });
 
@@ -104,6 +107,8 @@ export const deleteCloset = createServerFn({ method: "POST" })
       .returning({
         id: closet.id,
       });
+
     if (!deleted) throw new Error("Item not found");
+
     return { id: deleted.id };
   });

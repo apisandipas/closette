@@ -3,7 +3,7 @@ import PageContainer from "@/components/layout/page-container";
 import { brandsQueryOptions } from "@/features/brands/api/queries";
 import BrandsListPage from "@/features/brands/components/brands-listing";
 import { searchFiltersSchema } from "@/features/common";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 
 export const Route = createFileRoute("/_protected/admin/brands/_list")({
@@ -21,6 +21,7 @@ function RouteComponent() {
       pageHeaderAction={<NewButton to="/admin/brands/new" />}
     >
       <BrandsListPage />
+      <Outlet />
     </PageContainer>
   );
 }

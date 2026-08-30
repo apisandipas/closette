@@ -1,4 +1,6 @@
-import PageContainer from "@/components/layout/page-container";
+import { useCreateBrand } from "@/features/brands/api/mutation";
+import { BrandFormValues } from "@/features/brands/api/types";
+import BrandFormModal from "@/features/brands/components/brand-form-modal";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_protected/admin/brands/_list/new")({
@@ -6,5 +8,18 @@ export const Route = createFileRoute("/_protected/admin/brands/_list/new")({
 });
 
 function RouteComponent() {
-  return <PageContainer pageTitle="New Brand">Brands - New</PageContainer>;
+  const { mutateAsync } = useCreateBrand();
+
+  const onSubmit = async (value: BrandFormValues) => {
+    await mutateAsync({ data: value });
+  };
+
+  return (
+    <BrandFormModal
+      title="New brand"
+      description="Add a new brand option"
+      submitLabel="Create brand"
+      onSubmit={onSubmit}
+    />
+  );
 }
