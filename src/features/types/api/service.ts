@@ -4,6 +4,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { and, asc, count, desc, eq, ilike } from "drizzle-orm";
 import { searchFiltersSchema } from "@/features/common";
 import { ensureSession } from "@/lib/auth/functions";
+import { insertTypeSchema, selectTypeSchema, updateTypeSchema } from "./types";
+import { z } from "zod";
 
 export const getTypes = createServerFn({ method: "GET" })
   .validator(searchFiltersSchema)
@@ -41,4 +43,70 @@ export const getTypes = createServerFn({ method: "GET" })
       limit,
       pageCount: Math.max(1, Math.ceil(total / limit)),
     };
+  });
+
+export const getType = createServerFn({ method: "GET" })
+  .validator(selectTypeSchema.pick({ id: true }))
+  .handler(async ({ data: { id } }) => {
+    const { user } = await ensureSession();
+
+    const where = and(eq(itemType.id, id), eq(itemType.userId, user.id));
+
+    const selected = await db.query.itemType.findFirst({
+      where,
+    });
+
+    if (!selected) throw new Error("Type option now found");
+
+    return { type: selected };
+  });
+
+export const createType = createServerFn({ method: "POST" })
+  .validator(insertTypeSchema)
+  .handler(async ({ data }) => {
+    const { user } = await ensureSession();
+
+    const [created] = await db
+      .insert(itemType)
+      .values({ ...data, userId: user.id })
+      .returning();
+
+    if (!created) throw new Error("Type option not created");
+
+    return { type: created };
+  });
+
+export const updateType = createServerFn({ method: "POST" })
+  .validator(updateTypeSchema)
+  .handler(async ({ data }) => {
+    const { user } = await ensureSession();
+
+    const where = and(eq(itemType.id, data.id), eq(itemType.userId, user.id));
+
+    const [updated] = await db
+      .update(itemType)
+      .set(data)
+      .where(where)
+      .returning();
+
+    if (!updated) throw new Error("Type option not updated");
+
+    return { type: updated };
+  });
+
+export const deleteType = createServerFn({ method: "POST" })
+  .validator(z.object({ id: z.string() }))
+  .handler(async ({ data: { id } }) => {
+    const { user } = await ensureSession();
+
+    const where = and(eq(itemType.id, id), eq(itemType.userId, user.id));
+
+    const [deleted] = await db
+      .delete(itemType)
+      .where(where)
+      .returning({ id: itemType.id });
+
+    if (!deleted) throw new Error("Type option not deleted");
+
+    return { id: deleted };
   });

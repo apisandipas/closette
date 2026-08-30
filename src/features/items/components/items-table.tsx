@@ -30,6 +30,17 @@ const columns = columnHelper.columns([
     id: "closet",
     header: "Closet",
   }),
+  columnHelper.accessor("color", {
+    header: "Color",
+    cell: (props) => {
+      return (
+        <div
+          className="h-6 w-12"
+          style={{ backgroundColor: props.getValue() }}
+        ></div>
+      );
+    },
+  }),
   columnHelper.accessor("year", { header: "Year" }),
   columnHelper.accessor("quantity", { header: "Quantity" }),
 ]);

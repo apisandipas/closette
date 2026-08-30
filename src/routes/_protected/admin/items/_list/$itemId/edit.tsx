@@ -42,6 +42,7 @@ function RouteComponent() {
         brandId: it.brandId ?? "",
         typeId: it.typeId ?? "",
         closetId: it.closetId ?? "",
+        color: it.color ?? "",
         quantity: it.quantity,
         year: it.year,
       }}

@@ -12,12 +12,21 @@ export type ItemWithRelations = Item & {
   closet: typeof closet.$inferSelect | null;
 };
 
-export const insertItemSchema = createInsertSchema(item).omit({
-  id: true,
-  userId: true,
-  createdAt: true,
-  updatedAt: true,
-});
+const hexColorSchema = z
+  .string()
+  .regex(/^#[0-9a-fA-F]{6}$/)
+  .or(z.literal(""));
+
+export const insertItemSchema = createInsertSchema(item)
+  .omit({
+    id: true,
+    userId: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    color: hexColorSchema,
+  });
 
 export const selectItemSchema = createSelectSchema(item, {
   createdAt: z.coerce.date(),
@@ -25,16 +34,18 @@ export const selectItemSchema = createSelectSchema(item, {
 });
 
 // export const updateItemSchema = createUpdateSchema(item);
-export const updateItemSchema = insertItemSchema
-  .partial()
-  .extend({ id: z.string() });
+export const updateItemSchema = insertItemSchema.partial().extend({
+  id: z.string(),
+  color: hexColorSchema,
+});
 
 export const itemFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  brandId: z.string(), // "" = none selected
+  brandId: z.string(),
   typeId: z.string(),
   closetId: z.string(),
   quantity: z.number().int().min(0),
+  color: z.string(),
   year: z.number().int().min(1900).max(2100),
 });
 

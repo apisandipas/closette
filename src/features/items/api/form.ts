@@ -9,6 +9,7 @@ export const itemFormOpts = formOptions({
     closetId: "",
     quantity: 1,
     year: 1959,
+    color: "#FF46A2",
   } as ItemFormValues,
   validators: { onSubmit: itemFormSchema },
 });

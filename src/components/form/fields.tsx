@@ -1,7 +1,14 @@
 import { useFieldContext, useFormContext } from "@/lib/form-context";
 import { Field, FieldLabel } from "@/components/ui/field";
+import {
+  PopoverTrigger,
+  Popover,
+  PopoverContent,
+} from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { HexColorPicker } from "react-colorful";
+import { PipetteIcon } from "lucide-react";
 
 function FieldErrors() {
   const field = useFieldContext();
@@ -95,5 +102,47 @@ export function SubmitButton({ label }: { label: string }) {
         </Button>
       )}
     </form.Subscribe>
+  );
+}
+
+export function ColorField({ label }: { label: string }) {
+  const field = useFieldContext<string>();
+  return (
+    <Field>
+      <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
+      <Popover>
+        <div className="flex h-9 w-full items-center gap-2 rounded-3xl border border-transparent bg-input/50 px-3 transition-[color,box-shadow,background-color] focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/30">
+          {/* rendered current color */}
+          <span
+            aria-hidden="true"
+            className="size-5 shrink-0 rounded-full border"
+            style={{ backgroundColor: field.state.value || "transparent" }}
+          />
+          {/* hex, editable by hand too */}
+          <input
+            id={field.name}
+            value={field.state.value}
+            onChange={(e) => field.handleChange(e.target.value)}
+            onBlur={field.handleBlur}
+            placeholder="#000000"
+            className="min-w-0 flex-1 bg-transparent text-base outline-none md:text-sm"
+          />
+          {/* picker trigger */}
+          <PopoverTrigger
+            aria-label="Pick a color"
+            className="shrink-0 text-muted-foreground hover:text-foreground"
+          >
+            <PipetteIcon className="size-4" />
+          </PopoverTrigger>
+        </div>
+        <PopoverContent>
+          <HexColorPicker
+            color={field.state.value}
+            onChange={field.handleChange}
+          />
+        </PopoverContent>
+      </Popover>
+      <FieldErrors />
+    </Field>
   );
 }

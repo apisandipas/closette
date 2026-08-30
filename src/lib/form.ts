@@ -5,11 +5,12 @@ import {
   NumberField,
   SelectField,
   SubmitButton,
+  ColorField,
 } from "@/components/form/fields";
 
 export const { useAppForm, withForm } = createFormHook({
   fieldContext,
   formContext,
-  fieldComponents: { TextField, NumberField, SelectField },
+  fieldComponents: { TextField, NumberField, SelectField, ColorField },
   formComponents: { SubmitButton },
 });

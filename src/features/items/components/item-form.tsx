@@ -46,6 +46,9 @@ export const ItemFields = withForm({
             />
           )}
         </form.AppField>
+        <form.AppField name="color">
+          {(field) => <field.ColorField label="Color" />}
+        </form.AppField>
       </div>
       <div className="gap-4 grid grid-cols-2">
         <form.AppField name="quantity">
