@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 8jRItfBe6ssek4M32hiXemCHJmfhe0VR6cza9Zy4Wl8GI72mo0HNYaIzNTg48Bw
+\restrict DYrBs4hWrJvWh7OiZmIqTX1smJcmmHRPhuwGPahWUvavStbydYoWG6f63GvTISP
 
 -- Dumped from database version 16.15
 -- Dumped by pg_dump version 16.15
@@ -178,7 +178,8 @@ CREATE TABLE public.items (
     brand_id uuid,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    user_id text NOT NULL
+    user_id text NOT NULL,
+    color text
 );
 
 
@@ -266,6 +267,7 @@ COPY drizzle.__drizzle_migrations (id, hash, created_at) FROM stdin;
 2	97860ca5bac2c40288bb3ba2d9911873cfa208c47dffe7656fd8180ba19be6de	1787428311350
 3	14f4bbc5fc32c1e32373fb885e084d553f7f630ac797d3947e032238fc3713ce	1787434372696
 4	383175bce196ce2712b13e5d73ce23829763fabbd0811a7ed2cbe24e0a42764f	1787486437451
+5	24696b6272e238be0d8c094cfdb3296b9777ebb81fecf86e753103b97fc0a5e7	1788109110145
 \.
 
 
@@ -284,6 +286,7 @@ AzTfAdjM7atF8hqreCQh0Y0Iso3i74qU	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	credential	L4a
 
 COPY public.brands (id, name, user_id, created_at, updated_at) FROM stdin;
 2d6c04b4-6652-4c1e-ad12-b598e8f910f0	Mattel	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	2026-08-23 12:11:30.350871+00	2026-08-23 12:11:30.350871+00
+f89deee1-faca-48ad-95da-740e85f0706b	Kaylyns Brand	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	2026-08-30 13:59:03.215017+00	2026-08-30 13:59:03.215017+00
 \.
 
 
@@ -294,6 +297,9 @@ COPY public.brands (id, name, user_id, created_at, updated_at) FROM stdin;
 COPY public.closets (id, name, user_id, created_at, updated_at) FROM stdin;
 17ff0736-1ccb-4e73-a539-659cb9ffa45c	Kat	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	2026-08-23 11:01:55.543814+00	2026-08-23 11:01:55.543814+00
 2d82f21f-1f24-45e7-9870-3c4e16389d15	Mads	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	2026-08-23 11:05:10.815888+00	2026-08-23 11:05:10.815888+00
+a9daaca7-c9b8-4976-8874-623d25c9e5db	Unassigned	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	2026-08-30 17:28:56.001034+00	2026-08-30 17:28:56.001034+00
+9e1f9c2d-6ccf-4da8-8d7c-05c58a9d2a82	Dana	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	2026-08-30 17:29:16.963395+00	2026-08-30 17:29:16.963395+00
+e7e32405-3b58-46ac-9974-d18c581e355e	Chloe	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	2026-08-30 17:29:29.784254+00	2026-08-30 17:29:29.784254+00
 \.
 
 
@@ -301,18 +307,16 @@ COPY public.closets (id, name, user_id, created_at, updated_at) FROM stdin;
 -- Data for Name: items; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.items (id, name, image, year, quantity, closet_id, type_id, brand_id, created_at, updated_at, user_id) FROM stdin;
-34228eb2-aa1d-4d5b-b538-c91b277e6230	Cool Blue Barbie	\N	1997	1	2d82f21f-1f24-45e7-9870-3c4e16389d15	989153cb-5931-4e4c-8ea2-f4f5bea9b2c3	2d6c04b4-6652-4c1e-ad12-b598e8f910f0	2026-08-23 10:07:36.886887+00	2026-08-23 10:07:36.886887+00	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s
-f52fbbbf-c42f-449d-bf5e-c4dca6009681	Too Cool Teen Skipper	\N	1998	2	17ff0736-1ccb-4e73-a539-659cb9ffa45c	989153cb-5931-4e4c-8ea2-f4f5bea9b2c3	2d6c04b4-6652-4c1e-ad12-b598e8f910f0	2026-08-23 08:56:48.777138+00	2026-08-23 08:56:48.777138+00	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s
-\.
-
-
---
--- Data for Name: session; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.session (id, expires_at, token, created_at, updated_at, ip_address, user_agent, user_id) FROM stdin;
-BT1R8hiE5nknsShzdKl86k9OQCFzWUZT	2026-09-05 09:16:54.918	3DFtK8hkqnv04bFVxMuT1DqNk7lnWlKZ	2026-08-23 08:53:33.419	2026-08-29 09:16:54.918	127.0.0.1	Mozilla/5.0 (X11; Linux x86_64; rv:153.0) Gecko/20100101 Firefox/153.0	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s
+COPY public.items (id, name, image, year, quantity, closet_id, type_id, brand_id, created_at, updated_at, user_id, color) FROM stdin;
+1312aaf0-0693-4e79-a61e-3d5e64baa205	Extreme Green Skipper	\N	1997	1	2d82f21f-1f24-45e7-9870-3c4e16389d15	201c04fc-c9ac-4644-af1c-9d7e0f8d5423	2d6c04b4-6652-4c1e-ad12-b598e8f910f0	2026-08-30 17:30:33.193165+00	2026-08-30 17:30:33.193165+00	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	#00e05a
+34228eb2-aa1d-4d5b-b538-c91b277e6230	Cool Blue Barbie	\N	1997	1	2d82f21f-1f24-45e7-9870-3c4e16389d15	989153cb-5931-4e4c-8ea2-f4f5bea9b2c3	2d6c04b4-6652-4c1e-ad12-b598e8f910f0	2026-08-23 10:07:36.886887+00	2026-08-30 17:30:45.374+00	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	#83bce0
+f52fbbbf-c42f-449d-bf5e-c4dca6009681	Too Cool Teen Skipper	\N	1998	2	2d82f21f-1f24-45e7-9870-3c4e16389d15	989153cb-5931-4e4c-8ea2-f4f5bea9b2c3	2d6c04b4-6652-4c1e-ad12-b598e8f910f0	2026-08-23 08:56:48.777138+00	2026-08-30 17:30:58.233+00	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	#b166da
+1745d263-d68e-4a80-9348-7a22ee12c0cd	Perfect Pink	\N	1997	1	e7e32405-3b58-46ac-9974-d18c581e355e	201c04fc-c9ac-4644-af1c-9d7e0f8d5423	2d6c04b4-6652-4c1e-ad12-b598e8f910f0	2026-08-30 17:32:44.867384+00	2026-08-30 17:32:44.867384+00	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	#FF46A2
+56212536-2b6f-42db-b3e3-805ba91c9f3f	Olympic Barbie	\N	1996	1	a9daaca7-c9b8-4976-8874-623d25c9e5db	062a4ee9-c144-45bd-93a1-92eaf9144d97	2d6c04b4-6652-4c1e-ad12-b598e8f910f0	2026-08-30 17:33:33.933196+00	2026-08-30 17:33:33.933196+00	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	#FF46A2
+b6a4572b-e36a-48da-a6b5-65f06a54e623	Paint Dazzle	\N	1993	1	a9daaca7-c9b8-4976-8874-623d25c9e5db	50e55428-c587-42c1-b840-2a01f7852113	2d6c04b4-6652-4c1e-ad12-b598e8f910f0	2026-08-30 17:34:12.13916+00	2026-08-30 17:34:12.13916+00	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	#FF46A2
+1d1fde11-26cf-4af5-94f7-1fdad028aaf1	Paint Dazzle	\N	1993	1	a9daaca7-c9b8-4976-8874-623d25c9e5db	5e0ecd9f-2860-4b47-a517-c68f36236fa8	2d6c04b4-6652-4c1e-ad12-b598e8f910f0	2026-08-30 17:34:30.602157+00	2026-08-30 17:34:30.602157+00	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	#FF46A2
+418efc7d-81a2-4e6c-8a6b-f8d610d2ca19	Paint Dazzle	\N	1993	2	a9daaca7-c9b8-4976-8874-623d25c9e5db	d49d9dc8-88ce-4394-aa9a-0518ae89f233	2d6c04b4-6652-4c1e-ad12-b598e8f910f0	2026-08-30 17:35:03.141096+00	2026-08-30 17:35:03.141096+00	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	#7479e0
+df391f08-51b0-467b-91ae-64a6d455f948	Hello	\N	1959	1	9e1f9c2d-6ccf-4da8-8d7c-05c58a9d2a82	50e55428-c587-42c1-b840-2a01f7852113	f89deee1-faca-48ad-95da-740e85f0706b	2026-08-30 20:10:36.589802+00	2026-08-30 20:10:36.589802+00	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	#FF46A2
 \.
 
 
@@ -322,6 +326,11 @@ BT1R8hiE5nknsShzdKl86k9OQCFzWUZT	2026-09-05 09:16:54.918	3DFtK8hkqnv04bFVxMuT1Dq
 
 COPY public.types (id, name, user_id, created_at, updated_at) FROM stdin;
 989153cb-5931-4e4c-8ea2-f4f5bea9b2c3	T-Shirt	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	2026-08-23 12:12:48.480983+00	2026-08-23 12:12:48.480983+00
+201c04fc-c9ac-4644-af1c-9d7e0f8d5423	Overalls	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	2026-08-30 16:38:32.804092+00	2026-08-30 16:38:32.804092+00
+062a4ee9-c144-45bd-93a1-92eaf9144d97	Leotard	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	2026-08-30 17:28:10.136963+00	2026-08-30 17:28:10.136963+00
+50e55428-c587-42c1-b840-2a01f7852113	Jacket	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	2026-08-30 17:28:16.171396+00	2026-08-30 17:28:16.171396+00
+5e0ecd9f-2860-4b47-a517-c68f36236fa8	Skirt	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	2026-08-30 17:28:23.873806+00	2026-08-30 17:28:23.873806+00
+d49d9dc8-88ce-4394-aa9a-0518ae89f233	Sleeveless Shirt	L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	2026-08-30 17:28:33.62218+00	2026-08-30 17:28:33.62218+00
 \.
 
 
@@ -335,18 +344,10 @@ L4ajNfdbW9fL6oaklcBKOR43Ug1ld22s	Bryan Example	bryan@example.com	f	\N	2026-08-23
 
 
 --
--- Data for Name: verification; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.verification (id, identifier, value, expires_at, created_at, updated_at) FROM stdin;
-\.
-
-
---
 -- Name: __drizzle_migrations_id_seq; Type: SEQUENCE SET; Schema: drizzle; Owner: postgres
 --
 
-SELECT pg_catalog.setval('drizzle.__drizzle_migrations_id_seq', 4, true);
+SELECT pg_catalog.setval('drizzle.__drizzle_migrations_id_seq', 5, true);
 
 
 --
@@ -599,5 +600,5 @@ ALTER TABLE ONLY public.types
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 8jRItfBe6ssek4M32hiXemCHJmfhe0VR6cza9Zy4Wl8GI72mo0HNYaIzNTg48Bw
+\unrestrict DYrBs4hWrJvWh7OiZmIqTX1smJcmmHRPhuwGPahWUvavStbydYoWG6f63GvTISP
 
