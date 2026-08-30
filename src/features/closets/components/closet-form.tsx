@@ -1,6 +1,5 @@
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 
 export type ClosetFormValues = {
   name: string;

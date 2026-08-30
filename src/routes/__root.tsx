@@ -12,6 +12,7 @@ import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toast";
+import { ConfirmProvider } from "@/components/ui/confirm-dialog";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -58,7 +59,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       </head>
       <body>
         <ThemeProvider>
-          {children}
+          <ConfirmProvider>{children}</ConfirmProvider>
           <Toaster />
         </ThemeProvider>
         <DevTools />

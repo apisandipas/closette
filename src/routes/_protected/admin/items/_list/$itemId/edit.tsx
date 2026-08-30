@@ -36,18 +36,19 @@ function RouteComponent() {
   return (
     <ItemFormModal
       title="Edit item"
-      description={`Item ${itemId}`}
       submitLabel="Save changes"
       defaultValues={{
         name: it.name,
         brandId: it.brandId ?? "",
         typeId: it.typeId ?? "",
+        closetId: it.closetId ?? "",
         quantity: it.quantity,
         year: it.year,
       }}
       onSubmit={onSubmit}
       brands={formOptionData.brands}
       types={formOptionData.types}
+      closets={formOptionData.closets}
     />
   );
 }

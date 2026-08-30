@@ -8,14 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  ArrowRight,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronUp,
-  Search,
-} from "lucide-react";
+import type { ColumnDef, RowData } from "@tanstack/react-table";
 import {
   columnFilteringFeature,
   createColumnHelper,
@@ -31,7 +24,15 @@ import {
   tableFeatures,
   useTable,
 } from "@tanstack/react-table";
-import type { ColumnDef, RowData } from "@tanstack/react-table";
+import {
+  ArrowRight,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  Search,
+  X,
+} from "lucide-react";
 
 // One shared feature set for every table in the app. Columns are typed against
 // it, so callers must build them with the helper below rather than their own
@@ -85,6 +86,7 @@ export type DataTableProps<TData extends RowData> = {
   /** Called when a row is clicked or activated by keyboard. Rows are only
    *  interactive when this is provided. */
   openRow?: (row: TData) => void;
+  removeRow?: (row: TData) => void;
   searchable?: boolean;
   searchPlaceholder?: string;
   emptyMessage?: string;
@@ -103,6 +105,7 @@ function DataTable<TData extends RowData>({
   data,
   columns,
   openRow,
+  removeRow,
   searchable = true,
   searchPlaceholder = "Search all columns...",
   emptyMessage = "Nothing here yet.",
@@ -128,14 +131,18 @@ function DataTable<TData extends RowData>({
   const rows = table.getRowModel().rows;
 
   // Controlled (server) when the prop is supplied, otherwise the table owns it.
-  const page = pagination ? pagination.page : table.state.pagination.pageIndex + 1;
+  const page = pagination
+    ? pagination.page
+    : table.state.pagination.pageIndex + 1;
   const pageCount = pagination ? pagination.pageCount : table.getPageCount();
   const goToPage = (next: number) =>
     pagination ? pagination.onPageChange(next) : table.setPageIndex(next - 1);
 
   const searchValue = search ? search.value : (table.state.globalFilter ?? "");
   const onSearchChange = (value: string | number) =>
-    search ? search.onChange(String(value)) : table.setGlobalFilter(String(value));
+    search
+      ? search.onChange(String(value))
+      : table.setGlobalFilter(String(value));
   const isInteractive = Boolean(openRow);
   // +1 for the affordance column that trails each interactive row.
   const columnCount = columns.length + (isInteractive ? 1 : 0);
@@ -200,9 +207,7 @@ function DataTable<TData extends RowData>({
                   key={row.id}
                   role={isInteractive ? "link" : undefined}
                   tabIndex={isInteractive ? 0 : undefined}
-                  onClick={
-                    openRow ? () => openRow(row.original) : undefined
-                  }
+                  onClick={openRow ? () => openRow(row.original) : undefined}
                   onKeyDown={
                     openRow
                       ? (event) => {
@@ -230,9 +235,20 @@ function DataTable<TData extends RowData>({
                     </TableCell>
                   ))}
                   {isInteractive && (
-                    <TableCell className="w-0 text-muted-foreground">
-                      <ArrowRight className="size-4" />
-                    </TableCell>
+                    <>
+                      <TableCell className="w-0 text-muted-foreground">
+                        <ArrowRight className="size-4" />
+                      </TableCell>
+                      <TableCell
+                        className="w-0 text-muted-foreground"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          removeRow?.(row.original);
+                        }}
+                      >
+                        <X className="size-4" />
+                      </TableCell>
+                    </>
                   )}
                 </TableRow>
               ))

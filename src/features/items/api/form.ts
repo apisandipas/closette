@@ -6,6 +6,7 @@ export const itemFormOpts = formOptions({
     name: "",
     brandId: "",
     typeId: "",
+    closetId: "",
     quantity: 1,
     year: 1959,
   } as ItemFormValues,
@@ -18,6 +19,7 @@ export function toItemPayload(values: ItemFormValues) {
     ...values,
     brandId: values.brandId || null,
     typeId: values.typeId || null,
+    closetId: values.closetId || null,
   };
 }
 

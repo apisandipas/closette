@@ -5,6 +5,8 @@ import DataTable, {
 } from "@/components/ui/data-table";
 import { useNavigate } from "@tanstack/react-router";
 import type { ItemWithRelations } from "../api/types";
+import { useDeleteItem } from "../api/mutations";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 
 export type ItemsTableProps = {
   items: Array<ItemWithRelations>;
@@ -14,8 +16,6 @@ export type ItemsTableProps = {
 
 const columnHelper = createDataTableColumnHelper<ItemWithRelations>();
 
-// Accessors return "" for missing relations so sorting stays string-safe;
-// DataTable renders empty values as N/A.
 const columns = columnHelper.columns([
   columnHelper.accessor("name", { header: "Name" }),
   columnHelper.accessor((row) => row.brand?.name ?? "", {
@@ -36,11 +36,22 @@ const columns = columnHelper.columns([
 
 function ItemsTable({ items, pagination, search }: ItemsTableProps) {
   const navigate = useNavigate();
+  const { mutateAsync } = useDeleteItem();
+  const confirm = useConfirm();
+
+  const removeItemRow = async (item: ItemWithRelations) => {
+    const ok = await confirm({
+      title: "Delete item?",
+      description: `“${item.name}” will be permanently removed.`,
+    });
+    if (ok) await mutateAsync({ data: { id: item.id } });
+  };
 
   return (
     <DataTable
       data={items}
       columns={columns}
+      removeRow={removeItemRow}
       openRow={(item) =>
         navigate({
           to: "/admin/items/$itemId/edit",

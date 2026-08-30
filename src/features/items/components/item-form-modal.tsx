@@ -20,6 +20,7 @@ export type ItemFormModalProps = {
   defaultValues?: ItemFormValues;
   brands: SelectDataItem[];
   types: SelectDataItem[];
+  closets: SelectDataItem[];
   onSubmit: (values: ItemFormValues) => Promise<void>;
 };
 
@@ -30,6 +31,7 @@ export default function ItemFormModal({
   defaultValues,
   brands,
   types,
+  closets,
   onSubmit,
 }: ItemFormModalProps) {
   const navigate = useNavigate();
@@ -49,7 +51,7 @@ export default function ItemFormModal({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          {description && <DialogDescription>{description}</DialogDescription>}.
+          {description && <DialogDescription>{description}.</DialogDescription>}
         </DialogHeader>
         <form
           className="flex flex-col gap-6"
@@ -58,7 +60,12 @@ export default function ItemFormModal({
             form.handleSubmit();
           }}
         >
-          <ItemFields form={form} brands={brands} types={types} />
+          <ItemFields
+            form={form}
+            brands={brands}
+            types={types}
+            closets={closets}
+          />
           <DialogFooter>
             <DialogClose
               render={

@@ -1,9 +1,5 @@
 import { brand, closet, item, itemType } from "@/lib/db/schema";
-import {
-  createInsertSchema,
-  createSelectSchema,
-  createUpdateSchema,
-} from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
 export type Item = typeof item.$inferSelect;
@@ -37,6 +33,7 @@ export const itemFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
   brandId: z.string(), // "" = none selected
   typeId: z.string(),
+  closetId: z.string(),
   quantity: z.number().int().min(0),
   year: z.number().int().min(1900).max(2100),
 });

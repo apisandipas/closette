@@ -6,8 +6,12 @@ export type SelectDataItem = { id: string; name: string };
 
 export const ItemFields = withForm({
   ...itemFormOpts,
-  props: {} as { brands: SelectDataItem[]; types: SelectDataItem[] },
-  render: ({ form, brands, types }) => (
+  props: {} as {
+    brands: SelectDataItem[];
+    types: SelectDataItem[];
+    closets: SelectDataItem[];
+  },
+  render: ({ form, brands, types, closets }) => (
     <FieldGroup className="gap-5">
       <form.AppField name="name">
         {(field) => (
@@ -30,6 +34,15 @@ export const ItemFields = withForm({
               label="Type"
               placeholder="Select a type"
               options={types}
+            />
+          )}
+        </form.AppField>
+        <form.AppField name="closetId">
+          {(field) => (
+            <field.SelectField
+              label="Closet"
+              placeholder="Select a closet"
+              options={closets}
             />
           )}
         </form.AppField>

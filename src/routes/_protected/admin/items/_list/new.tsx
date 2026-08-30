@@ -26,6 +26,7 @@ function RouteComponent() {
       submitLabel="Create item"
       brands={formOptionData.brands}
       types={formOptionData.types}
+      closets={formOptionData.closets}
       onSubmit={onSubmit}
     />
   );
