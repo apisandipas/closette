@@ -10,6 +10,7 @@ export type ItemWithRelations = Item & {
   brand: typeof brand.$inferSelect | null;
   type: typeof itemType.$inferSelect | null;
   closet: typeof closet.$inferSelect | null;
+  imageUrl: string | null;
 };
 
 const hexColorSchema = z
@@ -47,6 +48,7 @@ export const itemFormSchema = z.object({
   quantity: z.number().int().min(0),
   color: z.string(),
   year: z.number().int().min(1900).max(2100),
+  image: z.string(),
 });
 
 export type ItemFormValues = z.infer<typeof itemFormSchema>;

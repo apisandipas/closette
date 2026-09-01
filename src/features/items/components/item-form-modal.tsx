@@ -21,6 +21,7 @@ export type ItemFormModalProps = {
   brands: SelectDataItem[];
   types: SelectDataItem[];
   closets: SelectDataItem[];
+  currentImageUrl: string | null;
   onSubmit: (values: ItemFormValues) => Promise<void>;
 };
 
@@ -32,6 +33,7 @@ export default function ItemFormModal({
   brands,
   types,
   closets,
+  currentImageUrl,
   onSubmit,
 }: ItemFormModalProps) {
   const navigate = useNavigate();
@@ -65,6 +67,7 @@ export default function ItemFormModal({
             brands={brands}
             types={types}
             closets={closets}
+            currentImageUrl={currentImageUrl}
           />
           <DialogFooter>
             <DialogClose

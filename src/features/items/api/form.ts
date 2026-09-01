@@ -10,6 +10,7 @@ export const itemFormOpts = formOptions({
     quantity: 1,
     year: 1959,
     color: "#FF46A2",
+    image: "",
   } as ItemFormValues,
   validators: { onSubmit: itemFormSchema },
 });
@@ -21,6 +22,7 @@ export function toItemPayload(values: ItemFormValues) {
     brandId: values.brandId || null,
     typeId: values.typeId || null,
     closetId: values.closetId || null,
+    image: values.image || null,
   };
 }
 

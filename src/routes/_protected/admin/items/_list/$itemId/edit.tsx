@@ -45,8 +45,10 @@ function RouteComponent() {
         color: it.color ?? "",
         quantity: it.quantity,
         year: it.year,
+        image: it.image ?? "",
       }}
       onSubmit={onSubmit}
+      currentImageUrl={it.imageUrl}
       brands={formOptionData.brands}
       types={formOptionData.types}
       closets={formOptionData.closets}

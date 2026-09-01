@@ -6,6 +6,11 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import {
+  ALLOWED_IMAGE_TYPES,
+  MAX_IMAGE_BYTES,
+  type AllowedImageType,
+} from "./constants";
 
 const bucket = process.env.B2_BUCKET!;
 
@@ -20,35 +25,14 @@ export const s3 = new S3Client({
   },
 });
 
-export const ALLOWED_IMAGE_TYPES = [
-  "image/webp",
-  "image/jpeg",
-  "image/png",
-] as const;
-
-export type AllowedImageType = (typeof ALLOWED_IMAGE_TYPES)[number];
-
-export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
-
-const EXTENSIONS: Record<AllowedImageType, string> = {
-  "image/webp": "webp",
-  "image/jpeg": "jpg",
-  "image/png": "png",
-};
-
-// Keys are prefixed by user so ownership is checkable without a db round trip.
-export function buildImageKey(userId: string, contentType: AllowedImageType) {
-  return `u/${userId}/${crypto.randomUUID()}.${EXTENSIONS[contentType]}`;
-}
-
-export function ownsKey(userId: string, key: string) {
-  return key.startsWith(`u/${userId}/`);
-}
-
 export function presignUpload(key: string, contentType: AllowedImageType) {
   return getSignedUrl(
     s3,
-    new PutObjectCommand({ Bucket: bucket, Key: key, ContentType: contentType }),
+    new PutObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      ContentType: contentType,
+    }),
     { expiresIn: 300 },
   );
 }
@@ -59,14 +43,10 @@ export function presignUpload(key: string, contentType: AllowedImageType) {
 // still has an hour of life left.
 export function presignDownload(key: string) {
   const hour = 3_600_000;
-  return getSignedUrl(
-    s3,
-    new GetObjectCommand({ Bucket: bucket, Key: key }),
-    {
-      expiresIn: 7200,
-      signingDate: new Date(Math.floor(Date.now() / hour) * hour),
-    },
-  );
+  return getSignedUrl(s3, new GetObjectCommand({ Bucket: bucket, Key: key }), {
+    expiresIn: 7200,
+    signingDate: new Date(Math.floor(Date.now() / hour) * hour),
+  });
 }
 
 // B2 has no presigned POST policies, so size cannot be capped in the signature.

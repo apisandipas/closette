@@ -30,13 +30,26 @@ const columns = columnHelper.columns([
     id: "closet",
     header: "Closet",
   }),
+  columnHelper.accessor("imageUrl", {
+    header: "Photo",
+    cell: (props) => {
+      const url = props.getValue();
+      return url ? (
+        <img
+          src={url}
+          alt=""
+          className="size-10 rounded-md border object-cover"
+        />
+      ) : null;
+    },
+  }),
   columnHelper.accessor("color", {
     header: "Color",
     cell: (props) => {
       return (
         <div
           className="h-6 w-12"
-          style={{ backgroundColor: props.getValue() }}
+          style={{ backgroundColor: props.getValue() || "" }}
         ></div>
       );
     },

@@ -10,8 +10,9 @@ export const ItemFields = withForm({
     brands: SelectDataItem[];
     types: SelectDataItem[];
     closets: SelectDataItem[];
+    currentImageUrl?: string | null;
   },
-  render: ({ form, brands, types, closets }) => (
+  render: ({ form, brands, types, closets, currentImageUrl }) => (
     <FieldGroup className="gap-5">
       <form.AppField name="name">
         {(field) => (
@@ -56,6 +57,13 @@ export const ItemFields = withForm({
         </form.AppField>
         <form.AppField name="year">
           {(field) => <field.NumberField label="Year" />}
+        </form.AppField>
+      </div>
+      <div className="gap-4 grid- grid-cols-1">
+        <form.AppField name="image">
+          {(field) => (
+            <field.ImageField label="Photo" currentUrl={currentImageUrl} />
+          )}
         </form.AppField>
       </div>
     </FieldGroup>

@@ -4,8 +4,19 @@ import { ensureSession } from "@/lib/auth/functions";
 import { createServerFn } from "@tanstack/react-start";
 import { and, asc, count, desc, eq, ilike } from "drizzle-orm";
 import { selectItemSchema, insertItemSchema, updateItemSchema } from "./types";
-import { searchFiltersSchema } from "@/features/common";
 import { z } from "zod";
+import {
+  ALLOWED_IMAGE_TYPES,
+  buildImageKey,
+  ownsKey,
+} from "@/lib/storage/constants";
+import {
+  deleteImage,
+  presignDownload,
+  presignUpload,
+  verifyUpload,
+} from "@/lib/storage";
+import { searchFiltersSchema } from "@/features/common";
 
 export const getItems = createServerFn({ method: "GET" })
   .validator(searchFiltersSchema)
@@ -28,10 +39,17 @@ export const getItems = createServerFn({ method: "GET" })
       db.select({ value: count() }).from(item).where(where),
     ]);
 
+    const signed = await Promise.all(
+      items.map(async (row) => ({
+        ...row,
+        imageUrl: row.image ? await presignDownload(row.image) : null,
+      })),
+    );
+
     const total = totals[0]?.value ?? 0;
 
     return {
-      items,
+      items: signed,
       total,
       page,
       limit,
@@ -48,7 +66,14 @@ export const getItem = createServerFn({ method: "GET" })
 
     const theItem = await db.query.item.findFirst({ where });
 
-    return { item: theItem };
+    if (!theItem) return { item: undefined };
+
+    return {
+      item: {
+        ...theItem,
+        imageUrl: theItem.image ? await presignDownload(theItem.image) : null,
+      },
+    };
   });
 
 export const getItemFormOptions = createServerFn({ method: "GET" }).handler(
@@ -90,6 +115,13 @@ export const createItem = createServerFn({ method: "POST" })
       if (!owned) throw new Error("Closet not found");
     }
 
+    // Never trust a key from the client. It must sit under this user's prefix
+    // and point at a real object of sane size and type.
+    if (data.image) {
+      if (!ownsKey(user.id, data.image)) throw new Error("Invalid image");
+      if (!(await verifyUpload(data.image))) throw new Error("Invalid image");
+    }
+
     const [created] = await db
       .insert(item)
       .values({ ...data, userId: user.id })
@@ -103,12 +135,33 @@ export const updateItem = createServerFn({ method: "POST" })
   .handler(async ({ data: { id, ...changes } }) => {
     const { user } = await ensureSession();
 
+    // Never trust a key from the client. It must sit under this user's prefix
+    // and point at a real object of sane size and type.
+    if (changes.image) {
+      if (!ownsKey(user.id, changes.image)) throw new Error("Invalid image");
+      if (!(await verifyUpload(changes.image)))
+        throw new Error("Invalid image");
+    }
+
+    const previous = await db.query.item.findFirst({
+      where: and(eq(item.id, id), eq(item.userId, user.id)),
+      columns: { image: true },
+    });
+
     const [updated] = await db
       .update(item)
       .set(changes)
       .where(and(eq(item.id, id), eq(item.userId, user.id)))
       .returning();
+
     if (!updated) throw new Error("Item not found");
+
+    // The old object is unreferenced now. A failed cleanup must not fail the
+    // request — the lifecycle rule sweeps up whatever leaks.
+    if (previous?.image && previous.image !== updated.image) {
+      await deleteImage(previous.image).catch(() => {});
+    }
+
     return { item: updated };
   });
 
@@ -124,8 +177,22 @@ export const deleteItem = createServerFn({ method: "POST" })
     const [deleted] = await db
       .delete(item)
       .where(and(eq(item.id, id), eq(item.userId, user.id)))
-      .returning({ id: item.id });
+      .returning({ id: item.id, image: item.image });
+
+    if (!deleted) throw new Error("Item not found");
+    if (deleted.image) await deleteImage(deleted.image).catch(() => {});
 
     if (!deleted) throw new Error("Item not found");
     return { id: deleted.id };
+  });
+
+export const createUploadUrl = createServerFn({ method: "POST" })
+  .validator(z.object({ contentType: z.enum(ALLOWED_IMAGE_TYPES) }))
+  .handler(async ({ data: { contentType } }) => {
+    const { user } = await ensureSession();
+
+    const key = buildImageKey(user.id, contentType);
+    const url = await presignUpload(key, contentType);
+
+    return { key, url };
   });

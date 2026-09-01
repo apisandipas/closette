@@ -1,14 +1,19 @@
-import { useFieldContext, useFormContext } from "@/lib/form-context";
+import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import {
-  PopoverTrigger,
   Popover,
   PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { HexColorPicker } from "react-colorful";
+import { createUploadUrl } from "@/features/items/api/service";
+import { useFieldContext, useFormContext } from "@/lib/form-context";
+import { resizeToWebp } from "@/lib/storage/resize-image";
+import { MAX_IMAGE_BYTES } from "@/lib/storage/constants";
+import { useServerFn } from "@tanstack/react-start";
 import { PipetteIcon } from "lucide-react";
+import { useState } from "react";
+import { HexColorPicker } from "react-colorful";
 
 function FieldErrors() {
   const field = useFieldContext();
@@ -142,6 +147,87 @@ export function ColorField({ label }: { label: string }) {
           />
         </PopoverContent>
       </Popover>
+      <FieldErrors />
+    </Field>
+  );
+}
+
+export function ImageField({
+  label,
+  currentUrl,
+}: {
+  label: string;
+  currentUrl?: string | null;
+}) {
+  const field = useFieldContext<string>();
+  const getUploadUrl = useServerFn(createUploadUrl);
+
+  const [preview, setPreview] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const shown = preview ?? currentUrl ?? null;
+
+  const onPick = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // so the same file can be picked again after an error
+    if (!file) return;
+
+    setBusy(true);
+    setError(null);
+
+    try {
+      const blob = await resizeToWebp(file);
+      if (blob.size > MAX_IMAGE_BYTES) throw new Error("That image is too big");
+
+      const { key, url } = await getUploadUrl({
+        data: { contentType: "image/webp" },
+      });
+
+      // The Content-Type must match what was signed or B2 rejects the
+      // signature with a 403 that says nothing useful.
+      const res = await fetch(url, {
+        method: "PUT",
+        body: blob,
+        headers: { "Content-Type": "image/webp" },
+      });
+      if (!res.ok) throw new Error(`Upload failed (${res.status})`);
+
+      field.handleChange(key);
+      setPreview((old) => {
+        if (old) URL.revokeObjectURL(old);
+        return URL.createObjectURL(blob);
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Field>
+      <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
+      <div className="flex items-center gap-3">
+        {shown && (
+          <img
+            src={shown}
+            alt=""
+            className="size-16 shrink-0 rounded-lg border object-cover"
+          />
+        )}
+        <input
+          id={field.name}
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          onChange={onPick}
+          onBlur={field.handleBlur}
+          disabled={busy}
+          className="text-sm"
+        />
+      </div>
+      {busy && <p className="text-muted-foreground text-sm">Uploading…</p>}
+      {error && <p className="text-destructive text-sm">{error}</p>}
       <FieldErrors />
     </Field>
   );
