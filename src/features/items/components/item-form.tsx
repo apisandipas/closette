@@ -1,6 +1,7 @@
 import { withForm } from "@/lib/form";
 import { itemFormOpts } from "../api/form";
 import { FieldGroup } from "@/components/ui/field";
+import { Tabs, TabsContent, TabsTrigger, TabsList } from "@/components/ui/tabs";
 
 export type SelectDataItem = { id: string; name: string };
 
@@ -13,59 +14,76 @@ export const ItemFields = withForm({
     currentImageUrl?: string | null;
   },
   render: ({ form, brands, types, closets, currentImageUrl }) => (
-    <FieldGroup className="gap-5">
-      <form.AppField name="name">
-        {(field) => (
-          <field.TextField label="Name" placeholder="Too Cool Teen Skipper" />
-        )}
-      </form.AppField>
-      <div className="gap-4 grid grid-cols-2">
-        <form.AppField name="brandId">
-          {(field) => (
-            <field.SelectField
-              label="Brand"
-              placeholder="Select a brand"
-              options={brands}
-            />
-          )}
-        </form.AppField>
-        <form.AppField name="typeId">
-          {(field) => (
-            <field.SelectField
-              label="Type"
-              placeholder="Select a type"
-              options={types}
-            />
-          )}
-        </form.AppField>
-        <form.AppField name="closetId">
-          {(field) => (
-            <field.SelectField
-              label="Closet"
-              placeholder="Select a closet"
-              options={closets}
-            />
-          )}
-        </form.AppField>
-        <form.AppField name="color">
-          {(field) => <field.ColorField label="Color" />}
-        </form.AppField>
-      </div>
-      <div className="gap-4 grid grid-cols-2">
-        <form.AppField name="quantity">
-          {(field) => <field.NumberField label="Quantity" />}
-        </form.AppField>
-        <form.AppField name="year">
-          {(field) => <field.NumberField label="Year" />}
-        </form.AppField>
-      </div>
-      <div className="gap-4 grid- grid-cols-1">
-        <form.AppField name="image">
-          {(field) => (
-            <field.ImageField label="Photo" currentUrl={currentImageUrl} />
-          )}
-        </form.AppField>
-      </div>
-    </FieldGroup>
+    <Tabs className="w-full max-w-md" defaultValue="overview">
+      <TabsList>
+        <TabsTrigger value="details">Details</TabsTrigger>
+
+        <TabsTrigger value="image">Image</TabsTrigger>
+      </TabsList>
+      <TabsContent value="details">
+        <FieldGroup className="gap-5">
+          <form.AppField name="name">
+            {(field) => (
+              <field.TextField
+                label="Name"
+                placeholder="Too Cool Teen Skipper"
+              />
+            )}
+          </form.AppField>
+
+          <div className="gap-4 grid grid-cols-2">
+            <form.AppField name="brandId">
+              {(field) => (
+                <field.SelectField
+                  label="Brand"
+                  placeholder="Select a brand"
+                  options={brands}
+                />
+              )}
+            </form.AppField>
+            <form.AppField name="typeId">
+              {(field) => (
+                <field.SelectField
+                  label="Type"
+                  placeholder="Select a type"
+                  options={types}
+                />
+              )}
+            </form.AppField>
+            <form.AppField name="closetId">
+              {(field) => (
+                <field.SelectField
+                  label="Closet"
+                  placeholder="Select a closet"
+                  options={closets}
+                />
+              )}
+            </form.AppField>
+            <form.AppField name="color">
+              {(field) => <field.ColorField label="Color" />}
+            </form.AppField>
+          </div>
+          <div className="gap-4 grid grid-cols-2">
+            <form.AppField name="quantity">
+              {(field) => <field.NumberField label="Quantity" />}
+            </form.AppField>
+            <form.AppField name="year">
+              {(field) => <field.NumberField label="Year" />}
+            </form.AppField>
+          </div>
+        </FieldGroup>
+      </TabsContent>
+      <TabsContent value="image">
+        <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+          <div className="gap-4 grid- grid-cols-1">
+            <form.AppField name="image">
+              {(field) => (
+                <field.ImageField label="Photo" currentUrl={currentImageUrl} />
+              )}
+            </form.AppField>
+          </div>
+        </div>
+      </TabsContent>
+    </Tabs>
   ),
 });
