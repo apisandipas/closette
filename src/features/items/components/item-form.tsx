@@ -17,7 +17,6 @@ export const ItemFields = withForm({
     <Tabs className="w-full max-w-md" defaultValue="overview">
       <TabsList>
         <TabsTrigger value="details">Details</TabsTrigger>
-
         <TabsTrigger value="image">Image</TabsTrigger>
       </TabsList>
       <TabsContent value="details">

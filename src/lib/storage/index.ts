@@ -11,17 +11,18 @@ import {
   MAX_IMAGE_BYTES,
   type AllowedImageType,
 } from "./constants";
+import { env } from "@/lib/env";
 
-const bucket = process.env.B2_BUCKET!;
+const bucket = env.B2_BUCKET;
 
 // B2 speaks the S3 API, so the AWS client works once it is pointed at the
 // bucket's regional endpoint instead of AWS.
 export const s3 = new S3Client({
-  region: process.env.B2_REGION!,
-  endpoint: process.env.B2_ENDPOINT!,
+  region: env.B2_REGION,
+  endpoint: env.B2_ENDPOINT,
   credentials: {
-    accessKeyId: process.env.B2_KEY_ID!,
-    secretAccessKey: process.env.B2_APP_KEY!,
+    accessKeyId: env.B2_KEY_ID,
+    secretAccessKey: env.B2_APP_KEY,
   },
 });
 

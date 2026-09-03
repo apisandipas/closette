@@ -14,6 +14,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { PipetteIcon } from "lucide-react";
 import { useState } from "react";
 import { HexColorPicker } from "react-colorful";
+import { useDropzone } from "react-dropzone";
 
 function FieldErrors() {
   const field = useFieldContext();
@@ -152,13 +153,7 @@ export function ColorField({ label }: { label: string }) {
   );
 }
 
-export function ImageField({
-  label,
-  currentUrl,
-}: {
-  label: string;
-  currentUrl?: string | null;
-}) {
+export function ImageField({ currentUrl }: { currentUrl?: string | null }) {
   const field = useFieldContext<string>();
   const getUploadUrl = useServerFn(createUploadUrl);
 
@@ -168,9 +163,18 @@ export function ImageField({
 
   const shown = preview ?? currentUrl ?? null;
 
-  const onPick = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    e.target.value = ""; // so the same file can be picked again after an error
+  const clearImage = () => {
+    setPreview((old) => {
+      if (old) URL.revokeObjectURL(old);
+      return null;
+    });
+    field.handleChange("");
+    setError(null);
+  };
+
+  const onDrop = async (files: File[]) => {
+    const file = files[0];
+
     if (!file) return;
 
     setBusy(true);
@@ -204,30 +208,42 @@ export function ImageField({
       setBusy(false);
     }
   };
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: { "image/png": [], "image/jpeg": [], "image/webp": [] },
+    multiple: false,
+    maxFiles: 1,
+    disabled: busy,
+  });
 
   return (
     <Field>
-      <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
-      <div className="flex items-center gap-3">
+      {/* <FieldLabel htmlFor={field.name}>{label}</FieldLabel> */}
+      <div
+        {...getRootProps({
+          className: `dropzone flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-10 cursor-pointer transition-all duration-300`,
+        })}
+      >
         {shown && (
           <img
             src={shown}
             alt=""
-            className="size-16 shrink-0 rounded-lg border object-cover"
+            className="size-48 shrink-0 rounded-lg border object-cover"
           />
         )}
         <input
-          id={field.name}
-          type="file"
-          accept="image/png,image/jpeg,image/webp"
-          onChange={onPick}
-          onBlur={field.handleBlur}
-          disabled={busy}
-          className="text-sm"
+          {...getInputProps({ id: field.name, onBlur: field.handleBlur })}
         />
       </div>
       {busy && <p className="text-muted-foreground text-sm">Uploading…</p>}
       {error && <p className="text-destructive text-sm">{error}</p>}
+      {shown && (
+        <div className="flex justify-center items-center gap-3">
+          <Button type="button" variant="ghost" size="sm" onClick={clearImage}>
+            Remove
+          </Button>
+        </div>
+      )}
       <FieldErrors />
     </Field>
   );
