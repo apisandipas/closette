@@ -16,7 +16,7 @@ const links: SidebarLinks[] = [
 
 const Sidebar = () => {
   return (
-    <div className="flex flex-col gap-4 pt-6 pb-12">
+    <div className="sticky top-16 flex flex-col gap-4 pt-6 pb-12 px-6 bg-white shadow-lg">
       {links.map(({ route, label, icon: Icon }) => {
         return (
           <Link

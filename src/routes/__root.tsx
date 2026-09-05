@@ -1,18 +1,18 @@
-import type { ReactNode } from "react";
+import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
+import { DevTools } from "@/components/dev-tools";
+import { NotFound } from "@/components/not-found";
+import { ThemeProvider } from "@/components/theme-provider";
+import { ConfirmProvider } from "@/components/ui/confirm-dialog";
+import { Toaster } from "@/components/ui/toast";
+import { QueryClient } from "@tanstack/react-query";
 import {
-  Outlet,
   HeadContent,
+  Outlet,
   Scripts,
   createRootRouteWithContext,
 } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 import appCss from "../styles.css?url";
-import { DevTools } from "@/components/dev-tools";
-import { QueryClient } from "@tanstack/react-query";
-import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
-import { NotFound } from "@/components/not-found";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/toast";
-import { ConfirmProvider } from "@/components/ui/confirm-dialog";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -57,7 +57,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="overscroll-none">
         <ThemeProvider>
           <ConfirmProvider>{children}</ConfirmProvider>
           <Toaster />

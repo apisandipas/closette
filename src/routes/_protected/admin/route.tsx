@@ -7,8 +7,8 @@ export const Route = createFileRoute("/_protected/admin")({
 
 function RouteComponent() {
   return (
-    <div className="flex flex-col bg-gray-100 dark:bg-slate-700 h-dvh">
-      <header className="flex bg-background shadow-xl w-full h-14 grow-0">
+    <div className="flex flex-col bg-gray-100 dark:bg-slate-700 h-dvh overflow-y-auto overscroll-none pt-14">
+      <header className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center bg-background shadow-xl w-full h-14 grow-0">
         <Link to="/dashboard" className="flex flex-row items-center gap-4 pl-4">
           <div className="font-heading font-bold">Closette Admin</div>
         </Link>
@@ -16,11 +16,11 @@ function RouteComponent() {
           <Link to={"/dashboard"}>Back to Dashboard</Link>
         </div>
       </header>
-      <div className="gap-6 grid grid-cols-5 m-6">
-        <aside className="col-span-1 bg-white shadow-lg p-4 rounded-xl">
+      <div className="grid grid-cols-[260px_1fr] gap-6 px-6 pt-7">
+        <aside className="rounded-xl">
           <Sidebar />
         </aside>
-        <main className="flex flex-col col-span-4 grow">
+        <main className="flex flex-col grow pt-6">
           <Outlet />
         </main>
       </div>
