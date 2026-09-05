@@ -16,7 +16,7 @@ function RouteComponent() {
           <Link to={"/dashboard"}>Back to Dashboard</Link>
         </div>
       </header>
-      <div className="grid grid-cols-[260px_1fr] gap-6 px-6 pt-7">
+      <div className="grid grid-cols-[260px_1fr] gap-6 px-6 pt-7 h-full">
         <aside className="rounded-xl">
           <Sidebar />
         </aside>

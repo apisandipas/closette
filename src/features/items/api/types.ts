@@ -15,7 +15,9 @@ export type ItemWithRelations = Item & {
 
 const hexColorSchema = z
   .string()
-  .regex(/^#[0-9a-fA-F]{6}$/)
+  .regex(/^#[0-9a-fA-F]{6}$/, {
+    message: "Valid color is required",
+  })
   .or(z.literal(""));
 
 export const insertItemSchema = createInsertSchema(item)
@@ -36,18 +38,18 @@ export const selectItemSchema = createSelectSchema(item, {
 
 // export const updateItemSchema = createUpdateSchema(item);
 export const updateItemSchema = insertItemSchema.partial().extend({
-  id: z.string().uuid(),
+  id: z.uuid(),
   color: hexColorSchema,
 });
 
 export const itemFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  brandId: z.string(),
-  typeId: z.string(),
-  closetId: z.string(),
-  quantity: z.number().int().min(0),
-  color: z.string(),
-  year: z.number().int().min(1900).max(2100),
+  brandId: z.uuid("Brand is required"),
+  typeId: z.uuid("Type is required"),
+  closetId: z.uuid("Closet is required"),
+  quantity: z.number("Quantity is required").int().min(0),
+  color: hexColorSchema,
+  year: z.number("Four-digit year is required").int().min(1900).max(2100),
   image: z.string(),
 });
 

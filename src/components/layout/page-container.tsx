@@ -33,14 +33,14 @@ export default function PageContainer({
   const hasHeader = pageTitle || pageHeaderAction;
   const content = isLoading ? <PageSkeleton /> : children;
   return (
-    <section className="flex flex-col item-center">
+    <section className="flex flex-col item-center mb-6">
       {hasHeader && (
-        <div className="flex items-center mb-6">
+        <header className="flex items-center mb-6 border-1">
           <h1 className="font-sans font-bold text-4xl">{pageTitle}</h1>
           {pageHeaderAction && (
             <div className="ml-auto">{pageHeaderAction}</div>
           )}
-        </div>
+        </header>
       )}
       {content}
     </section>
