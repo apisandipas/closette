@@ -4,10 +4,9 @@ import { brandsQueryOptions } from "@/features/brands/api/queries";
 import BrandsListPage from "@/features/brands/components/brands-listing";
 import { searchFiltersSchema } from "@/features/common";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 
 export const Route = createFileRoute("/_protected/admin/brands/_list")({
-  validateSearch: zodValidator(searchFiltersSchema),
+  validateSearch: searchFiltersSchema,
   loaderDeps: ({ search }) => search,
   loader: ({ deps, context }) =>
     context.queryClient.ensureQueryData(brandsQueryOptions(deps)),

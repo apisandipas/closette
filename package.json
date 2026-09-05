@@ -35,7 +35,6 @@
     "@tanstack/react-router-ssr-query": "^1.167.1",
     "@tanstack/react-start": "^1.168.32",
     "@tanstack/react-table": "^9.1.2",
-    "@tanstack/zod-adapter": "^1.167.0",
     "better-auth": "^1.6.25",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -68,6 +67,7 @@
     "jiti": "^2.7.0",
     "typescript": "^6",
     "typescript-eslint": "^8.65.0",
-    "vite": "^8.1.5"
+    "vite": "^8.1.5",
+    "vitest": "^4.1.11"
   }
 }
