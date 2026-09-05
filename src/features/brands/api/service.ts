@@ -93,7 +93,7 @@ export const updateBrand = createServerFn({ method: "POST" })
 export const deleteBrand = createServerFn({ method: "POST" })
   .validator(
     z.object({
-      id: z.string(),
+      id: z.string().uuid(),
     }),
   )
   .handler(async ({ data: { id } }) => {

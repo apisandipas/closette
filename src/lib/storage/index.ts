@@ -71,5 +71,5 @@ export async function verifyUpload(key: string) {
 }
 
 export async function deleteImage(key: string) {
-  await s3.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }));
+  return await s3.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }));
 }

@@ -36,7 +36,7 @@ export const selectItemSchema = createSelectSchema(item, {
 
 // export const updateItemSchema = createUpdateSchema(item);
 export const updateItemSchema = insertItemSchema.partial().extend({
-  id: z.string(),
+  id: z.string().uuid(),
   color: hexColorSchema,
 });
 

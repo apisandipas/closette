@@ -20,8 +20,9 @@ export const insertTypeSchema = createInsertSchema(itemType).omit({
 export const selectTypeSchema = createSelectSchema(itemType);
 
 export const updateTypeSchema = createUpdateSchema(itemType)
+  .omit({ userId: true, createdAt: true, updatedAt: true })
   .partial()
-  .extend({ id: z.string() });
+  .extend({ id: z.string().uuid() });
 
 export const typeFormSchema = z.object({
   name: z.string().min(1, "Name is required"),

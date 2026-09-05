@@ -19,8 +19,9 @@ export const insertBrandSchema = createInsertSchema(brand).omit({
 export const selectBrandSchema = createSelectSchema(brand);
 
 export const updateBrandSchema = createUpdateSchema(brand)
+  .omit({ userId: true, createdAt: true, updatedAt: true })
   .partial()
-  .extend({ id: z.string() });
+  .extend({ id: z.string().uuid() });
 
 export const brandFormSchema = z.object({
   name: z.string().min(1, "Name is required"),

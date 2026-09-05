@@ -20,8 +20,9 @@ export const insertClosetSchema = createInsertSchema(closet).omit({
 });
 export const selectClosetSchema = createSelectSchema(closet);
 export const updateClosetSchema = createUpdateSchema(closet)
+  .omit({ userId: true, createdAt: true, updatedAt: true })
   .partial()
-  .extend({ id: z.string() });
+  .extend({ id: z.string().uuid() });
 
 export const closetFormSchema = z.object({
   name: z.string().min(1, "Name is required"),

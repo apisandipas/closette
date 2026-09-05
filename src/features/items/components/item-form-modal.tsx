@@ -21,7 +21,7 @@ export type ItemFormModalProps = {
   brands: SelectDataItem[];
   types: SelectDataItem[];
   closets: SelectDataItem[];
-  currentImageUrl: string | null;
+  currentImageUrl?: string | null;
   onSubmit: (values: ItemFormValues) => Promise<void>;
 };
 

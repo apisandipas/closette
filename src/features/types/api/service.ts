@@ -56,7 +56,7 @@ export const getType = createServerFn({ method: "GET" })
       where,
     });
 
-    if (!selected) throw new Error("Type option now found");
+    if (!selected) throw new Error("Type option not found");
 
     return { type: selected };
   });
@@ -95,7 +95,7 @@ export const updateType = createServerFn({ method: "POST" })
   });
 
 export const deleteType = createServerFn({ method: "POST" })
-  .validator(z.object({ id: z.string() }))
+  .validator(z.object({ id: z.string().uuid() }))
   .handler(async ({ data: { id } }) => {
     const { user } = await ensureSession();
 
@@ -108,5 +108,5 @@ export const deleteType = createServerFn({ method: "POST" })
 
     if (!deleted) throw new Error("Type option not deleted");
 
-    return { id: deleted };
+    return { id: deleted.id };
   });

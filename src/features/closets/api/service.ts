@@ -95,7 +95,7 @@ export const updateCloset = createServerFn({ method: "POST" })
 export const deleteCloset = createServerFn({ method: "POST" })
   .validator(
     z.object({
-      id: z.string(),
+      id: z.string().uuid(),
     }),
   )
   .handler(async ({ data: { id } }) => {
@@ -108,7 +108,7 @@ export const deleteCloset = createServerFn({ method: "POST" })
         id: closet.id,
       });
 
-    if (!deleted) throw new Error("Item not found");
+    if (!deleted) throw new Error("Closet not found");
 
     return { id: deleted.id };
   });

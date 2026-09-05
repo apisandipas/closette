@@ -153,7 +153,13 @@ export function ColorField({ label }: { label: string }) {
   );
 }
 
-export function ImageField({ currentUrl }: { currentUrl?: string | null }) {
+export function ImageField({
+  label,
+  currentUrl,
+}: {
+  label: string;
+  currentUrl?: string | null;
+}) {
   const field = useFieldContext<string>();
   const getUploadUrl = useServerFn(createUploadUrl);
 
@@ -218,7 +224,7 @@ export function ImageField({ currentUrl }: { currentUrl?: string | null }) {
 
   return (
     <Field>
-      {/* <FieldLabel htmlFor={field.name}>{label}</FieldLabel> */}
+      <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
       <div
         {...getRootProps({
           className: `dropzone flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-10 cursor-pointer transition-all duration-300`,
