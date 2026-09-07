@@ -5,7 +5,7 @@ import { filterQueryOptions } from "../api/queries";
 
 import type { DashboardFilters } from "../api/types";
 
-const route = getRouteApi("/_protected/dashboard/");
+const route = getRouteApi("/_protected/dashboard");
 
 const groups: { key: keyof DashboardFilters; label: string }[] = [
   { key: "types", label: "Types" },
@@ -19,6 +19,7 @@ export const FilterSidebar = () => {
 
   const toggle = (key: keyof DashboardFilters, name: string) =>
     navigate({
+      to: "/dashboard",
       search: (prev) => ({
         ...prev,
         [key]: prev[key].includes(name)

@@ -64,7 +64,10 @@ export const getItem = createServerFn({ method: "GET" })
 
     const where = and(eq(item.id, id), eq(item.userId, user.id));
 
-    const theItem = await db.query.item.findFirst({ where });
+    const theItem = await db.query.item.findFirst({
+      where,
+      with: { brand: true, type: true, closet: true },
+    });
 
     if (!theItem) return { item: undefined };
 

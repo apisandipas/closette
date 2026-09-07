@@ -2,15 +2,30 @@ import { UserDropdown } from "@/features/dashboard/components/user-dropdown";
 import { ThemeToggle } from "@/components/theme-switcher";
 import { authClient } from "@/lib/auth/auth-client";
 import { getSession } from "@/lib/auth/functions";
+import { dashboardFiltersSchema } from "@/features/dashboard/api/types";
+import { FilterSidebar } from "@/features/dashboard/components/filter-sidebar";
+import { MasonryComponent } from "@/features/dashboard/components/masonry";
+import {
+  dashboardQueryOptions,
+  filterQueryOptions,
+} from "@/features/dashboard/api/queries";
+import type { ErrorComponentProps } from "@tanstack/react-router";
 import {
   createFileRoute,
+  ErrorComponent,
   Link,
   Outlet,
   redirect,
 } from "@tanstack/react-router";
 import { Rabbit } from "lucide-react";
 
+const DashboardErrorComponent = ({ error }: ErrorComponentProps) => {
+  return <ErrorComponent error={error} />;
+};
+
 export const Route = createFileRoute("/_protected/dashboard")({
+  validateSearch: dashboardFiltersSchema,
+  loaderDeps: ({ search }) => search,
   beforeLoad: async () => {
     const session = await getSession();
 
@@ -20,6 +35,12 @@ export const Route = createFileRoute("/_protected/dashboard")({
 
     return { user: session.user };
   },
+  loader: ({ context, deps }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData(dashboardQueryOptions(deps)),
+      context.queryClient.ensureQueryData(filterQueryOptions()),
+    ]),
+  errorComponent: DashboardErrorComponent,
   component: RouteComponent,
 });
 
@@ -37,7 +58,15 @@ function RouteComponent() {
         </div>
       </header>
       <main className="flex flex-col grow">
-        <Outlet />
+        <div className="grid grid-cols-[260px_1fr] gap-6 px-6 pt-7 h-full">
+          <div className="rounded-xl">
+            <FilterSidebar />
+          </div>
+          <main className="flex flex-col grow pt-6">
+            <MasonryComponent />
+            <Outlet />
+          </main>
+        </div>
       </main>
     </div>
   );

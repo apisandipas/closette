@@ -17,6 +17,7 @@ import { Route as ProtectedAdminRouteRouteImport } from './routes/_protected/adm
 import { Route as ProtectedDashboardRouteRouteImport } from './routes/_protected/dashboard/route'
 import { Route as ProtectedAdminIndexRouteImport } from './routes/_protected/admin/index'
 import { Route as ProtectedDashboardIndexRouteImport } from './routes/_protected/dashboard/index'
+import { Route as ProtectedDashboardItemIdRouteImport } from './routes/_protected/dashboard/$itemId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ProtectedAdminBrandsListRouteImport } from './routes/_protected/admin/brands/_list'
 import { Route as ProtectedAdminClosetsListRouteImport } from './routes/_protected/admin/closets/_list'
@@ -74,6 +75,12 @@ const ProtectedDashboardIndexRoute = ProtectedDashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ProtectedDashboardRouteRoute,
 } as any)
+const ProtectedDashboardItemIdRoute =
+  ProtectedDashboardItemIdRouteImport.update({
+    id: '/$itemId',
+    path: '/$itemId',
+    getParentRoute: () => ProtectedDashboardRouteRoute,
+  } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -180,6 +187,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/admin': typeof ProtectedAdminRouteRouteWithChildren
   '/dashboard': typeof ProtectedDashboardRouteRouteWithChildren
+  '/dashboard/$itemId': typeof ProtectedDashboardItemIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/admin/': typeof ProtectedAdminIndexRoute
   '/dashboard/': typeof ProtectedDashboardIndexRoute
@@ -204,6 +212,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/dashboard/$itemId': typeof ProtectedDashboardItemIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/admin': typeof ProtectedAdminIndexRoute
   '/dashboard': typeof ProtectedDashboardIndexRoute
@@ -228,6 +237,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_protected/admin': typeof ProtectedAdminRouteRouteWithChildren
   '/_protected/dashboard': typeof ProtectedDashboardRouteRouteWithChildren
+  '/_protected/dashboard/$itemId': typeof ProtectedDashboardItemIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_protected/admin/': typeof ProtectedAdminIndexRoute
   '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
@@ -256,6 +266,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/admin'
     | '/dashboard'
+    | '/dashboard/$itemId'
     | '/api/auth/$'
     | '/admin/'
     | '/dashboard/'
@@ -280,6 +291,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/signup'
+    | '/dashboard/$itemId'
     | '/api/auth/$'
     | '/admin'
     | '/dashboard'
@@ -303,6 +315,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_protected/admin'
     | '/_protected/dashboard'
+    | '/_protected/dashboard/$itemId'
     | '/api/auth/$'
     | '/_protected/admin/'
     | '/_protected/dashboard/'
@@ -388,6 +401,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof ProtectedDashboardIndexRouteImport
+      parentRoute: typeof ProtectedDashboardRouteRoute
+    }
+    '/_protected/dashboard/$itemId': {
+      id: '/_protected/dashboard/$itemId'
+      path: '/$itemId'
+      fullPath: '/dashboard/$itemId'
+      preLoaderRoute: typeof ProtectedDashboardItemIdRouteImport
       parentRoute: typeof ProtectedDashboardRouteRoute
     }
     '/api/auth/$': {
@@ -608,11 +628,13 @@ const ProtectedAdminRouteRouteWithChildren =
   ProtectedAdminRouteRoute._addFileChildren(ProtectedAdminRouteRouteChildren)
 
 interface ProtectedDashboardRouteRouteChildren {
+  ProtectedDashboardItemIdRoute: typeof ProtectedDashboardItemIdRoute
   ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
 }
 
 const ProtectedDashboardRouteRouteChildren: ProtectedDashboardRouteRouteChildren =
   {
+    ProtectedDashboardItemIdRoute: ProtectedDashboardItemIdRoute,
     ProtectedDashboardIndexRoute: ProtectedDashboardIndexRoute,
   }
 

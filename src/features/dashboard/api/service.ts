@@ -73,7 +73,7 @@ export const getDashboardItems = createServerFn({ method: "GET" })
         ? inArray(
             item.closetId,
             db
-              .select({ id: closet.id })
+              .select({ id: closet.id, name: closet.name })
               .from(closet)
               .where(
                 and(
