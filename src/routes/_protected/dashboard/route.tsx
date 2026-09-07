@@ -1,4 +1,4 @@
-import { UserDropdown } from "@/components/dashboard/user-dropdown";
+import { UserDropdown } from "@/features/dashboard/components/user-dropdown";
 import { ThemeToggle } from "@/components/theme-switcher";
 import { authClient } from "@/lib/auth/auth-client";
 import { getSession } from "@/lib/auth/functions";
