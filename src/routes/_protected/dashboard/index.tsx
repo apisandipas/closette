@@ -1,8 +1,12 @@
+import { dashboardFiltersSchema } from "@/features/dashboard/api/types";
 import { FilterSidebar } from "@/features/dashboard/components/filter-sidebar";
 import { MasonryComponent } from "@/features/dashboard/components/masonry";
 import type { ErrorComponentProps } from "@tanstack/react-router";
 import { ErrorComponent, createFileRoute } from "@tanstack/react-router";
-import { dashboardFiltersSchema } from "@/features/dashboard/api/types";
+import {
+  dashboardQueryOptions,
+  filterQueryOptions,
+} from "@/features/dashboard/api/queries";
 
 const DashboardErrorComponent = ({ error }: ErrorComponentProps) => {
   return <ErrorComponent error={error} />;
@@ -15,11 +19,11 @@ export const Route = createFileRoute("/_protected/dashboard/")({
     brands: search.brands,
     closetNames: search.closetNames,
   }),
-  // loader: async ({ context, deps }) =>
-  //   Promise.all([
-  //     context.queryClient.ensureQueryData(dashboardQueryOptions(deps)),
-  //     context.queryClient.ensureQueryData(filterQueryOptions()),
-  //   ]),
+  loader: ({ context, deps }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData(dashboardQueryOptions(deps)),
+      context.queryClient.ensureQueryData(filterQueryOptions()),
+    ]),
   errorComponent: DashboardErrorComponent,
   component: DashboardComponent,
 });

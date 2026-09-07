@@ -1,19 +1,12 @@
-type MasonryCardProps = {
-  index: number;
-  data: MasonryCardData;
-  width: number;
-};
+import type { DashboardItem } from "../api/service";
 
-type MasonryCardData = { id: number };
+type MasonryCardProps = { index: number; data: DashboardItem; width: number };
 
-export const MasonryCard = ({
-  index,
-  data: { id },
-  width,
-}: MasonryCardProps) => (
-  <div>
-    <div>Index: {index}</div>
-    <pre>ID: {id}</pre>
-    <div>Column width: {width}</div>
+export const MasonryCard = ({ data }: MasonryCardProps) => (
+  <div className="rounded-lg overflow-hidden bg-white shadow">
+    {data.imageUrl && (
+      <img src={data.imageUrl} alt={data.name} className="w-full" />
+    )}
+    <div className="p-2 text-sm">{data.name}</div>
   </div>
 );
