@@ -36,6 +36,20 @@
       "when": 1788109110145,
       "tag": "0004_giant_golden_guardian",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1788794734103,
+      "tag": "0005_large_gargoyle",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1788794796085,
+      "tag": "0006_flowery_randall",
+      "breakpoints": true
     }
   ]
 }

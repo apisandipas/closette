@@ -5,6 +5,7 @@ import {
   pgTable,
   text,
   timestamp,
+  unique,
   uuid,
 } from "drizzle-orm/pg-core";
 
@@ -26,14 +27,17 @@ export const closet = pgTable(
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
-  (table) => [index("closets_userId_idx").on(table.userId)],
+  (table) => [
+    index("closets_userId_idx").on(table.userId),
+    unique("closets_userId_name_unique").on(table.userId, table.name),
+  ],
 );
 
 export const brand = pgTable(
   "brands",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    name: text("name").notNull().unique(),
+    name: text("name").notNull(),
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
@@ -45,14 +49,17 @@ export const brand = pgTable(
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
-  (table) => [index("brands_userId_idx").on(table.userId)],
+  (table) => [
+    index("brands_userId_idx").on(table.userId),
+    unique("brands_userId_name_unique").on(table.userId, table.name),
+  ],
 );
 
 export const itemType = pgTable(
   "types",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    name: text("name").notNull().unique(),
+    name: text("name").notNull(),
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
@@ -64,7 +71,10 @@ export const itemType = pgTable(
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
-  (table) => [index("types_userId_idx").on(table.userId)],
+  (table) => [
+    index("types_userId_idx").on(table.userId),
+    unique("types_userId_name_unique").on(table.userId, table.name),
+  ],
 );
 
 export const item = pgTable(

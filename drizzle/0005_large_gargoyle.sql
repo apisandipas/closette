@@ -1,0 +1,1 @@
+ALTER TABLE "closets" ADD CONSTRAINT "closets_userId_name_unique" UNIQUE("user_id","name");
