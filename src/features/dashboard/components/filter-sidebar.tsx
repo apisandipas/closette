@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { getRouteApi } from "@tanstack/react-router";
+import { getRouteApi, Link } from "@tanstack/react-router";
 import { Label } from "@/components/ui/label";
 import { filterQueryOptions } from "../api/queries";
 
@@ -12,10 +12,12 @@ const groups: { key: keyof DashboardFilters; label: string }[] = [
   { key: "brands", label: "Brands" },
   { key: "closetNames", label: "Closets" },
 ];
+
 export const FilterSidebar = () => {
   const { data } = useSuspenseQuery(filterQueryOptions());
   const search = route.useSearch();
   const navigate = route.useNavigate();
+  const active = groups.some(({ key }) => search[key].length > 0);
 
   const toggle = (key: keyof DashboardFilters, name: string) =>
     navigate({
@@ -46,6 +48,16 @@ export const FilterSidebar = () => {
           ))}
         </fieldset>
       ))}
+
+      <Link
+        to="/dashboard"
+        search={{}}
+        replace
+        aria-disabled={!active}
+        className="mt-auto self-end text-sm underline aria-disabled:pointer-events-none aria-disabled:opacity-40"
+      >
+        Clear filters
+      </Link>
     </aside>
   );
 };
