@@ -1,0 +1,9 @@
+dist
+.output
+.tanstack
+.nitro
+.direnv
+drizzle
+db
+src/routeTree.gen.ts
+package-lock.json

@@ -4,6 +4,7 @@ import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 import { defineConfig, globalIgnores } from "eslint/config";
 import pluginRouter from "@tanstack/eslint-plugin-router";
+import prettier from "eslint-config-prettier";
 
 export default defineConfig([
   // Build output and generated files are not ours to lint.
@@ -55,4 +56,7 @@ export default defineConfig([
       "@typescript-eslint/no-empty-object-type": "warn",
     },
   },
+
+  // Last, so it wins: turns off every rule that would argue with prettier.
+  prettier,
 ]);
