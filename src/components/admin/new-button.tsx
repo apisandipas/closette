@@ -4,7 +4,7 @@ import { Plus } from "lucide-react";
 export default function NewButton(props: any) {
   return (
     <Link
-      className="flex gap-2 bg-primary p-3 rounded-lg text-white"
+      className="bg-primary flex gap-2 rounded-lg p-3 text-white"
       {...props}
     >
       <Plus /> New

@@ -11,7 +11,7 @@ const MasonrySkeleton = ({ count }: { count: number }) => (
     {Array.from({ length: count }, (_, i) => (
       <div
         key={i}
-        className="animate-pulse rounded-lg bg-muted-foreground/20"
+        className="bg-muted-foreground/20 animate-pulse rounded-lg"
         style={{ height: 160 + ((i * 53) % 120) }}
       />
     ))}

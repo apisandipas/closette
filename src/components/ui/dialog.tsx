@@ -1,23 +1,23 @@
-import * as React from "react"
-import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
-import { XIcon } from "lucide-react"
+import * as React from "react";
+import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
+import { XIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />
+  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
 }
 
 function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {
-  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
+  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
 }
 
 function DialogPortal({ ...props }: DialogPrimitive.Portal.Props) {
-  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
+  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
 }
 
 function DialogClose({ ...props }: DialogPrimitive.Close.Props) {
-  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
+  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
 }
 
 function DialogBackdrop({
@@ -29,11 +29,11 @@ function DialogBackdrop({
       data-slot="dialog-backdrop"
       className={cn(
         "fixed inset-0 z-50 bg-black/50 transition-opacity duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 function DialogContent({
@@ -48,9 +48,9 @@ function DialogContent({
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(
-          "fixed top-1/2 left-1/2 z-50 flex max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] max-w-lg -translate-1/2 flex-col gap-6 overflow-y-auto rounded-2xl bg-background p-6 text-foreground shadow-xl outline-none",
+          "bg-background text-foreground fixed top-1/2 left-1/2 z-50 flex max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] max-w-lg -translate-1/2 flex-col gap-6 overflow-y-auto rounded-2xl p-6 shadow-xl outline-none",
           "transition-[opacity,transform] duration-200 data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0",
-          className
+          className,
         )}
         {...props}
       >
@@ -59,14 +59,14 @@ function DialogContent({
           <DialogPrimitive.Close
             data-slot="dialog-close"
             aria-label="Close"
-            className="absolute top-4 right-4 rounded-full p-1 text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/30"
+            className="text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring/30 absolute top-4 right-4 rounded-full p-1 transition-colors outline-none focus-visible:ring-3"
           >
             <XIcon className="size-4" />
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Popup>
     </DialogPortal>
-  )
+  );
 }
 
 function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
@@ -76,7 +76,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
       className={cn("flex flex-col gap-1.5", className)}
       {...props}
     />
-  )
+  );
 }
 
 function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
@@ -85,11 +85,11 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="dialog-footer"
       className={cn(
         "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
@@ -99,7 +99,7 @@ function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
       className={cn("font-heading text-xl font-bold", className)}
       {...props}
     />
-  )
+  );
 }
 
 function DialogDescription({
@@ -109,10 +109,10 @@ function DialogDescription({
   return (
     <DialogPrimitive.Description
       data-slot="dialog-description"
-      className={cn("text-sm text-muted-foreground", className)}
+      className={cn("text-muted-foreground text-sm", className)}
       {...props}
     />
-  )
+  );
 }
 
 export {
@@ -126,4 +126,4 @@ export {
   DialogFooter,
   DialogTitle,
   DialogDescription,
-}
+};

@@ -151,7 +151,7 @@ function DataTable<TData extends RowData>({
     <div className="flex flex-col gap-4">
       {searchable && (
         <div className="relative w-full max-w-sm">
-          <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
           <DebouncedInput
             value={searchValue}
             onChange={onSearchChange}
@@ -161,7 +161,7 @@ function DataTable<TData extends RowData>({
         </div>
       )}
 
-      <div className="border overflow-hidden">
+      <div className="overflow-hidden border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((group) => (
@@ -173,7 +173,7 @@ function DataTable<TData extends RowData>({
                       {header.isPlaceholder ? null : (
                         <button
                           type="button"
-                          className="flex items-center gap-1 text-muted-foreground hover:text-foreground"
+                          className="text-muted-foreground hover:text-foreground flex items-center gap-1"
                           onClick={header.column.getToggleSortingHandler()}
                         >
                           <table.FlexRender header={header} />
@@ -196,7 +196,7 @@ function DataTable<TData extends RowData>({
               <TableRow className="hover:bg-transparent">
                 <TableCell
                   colSpan={columnCount}
-                  className="p-7 text-center text-muted-foreground"
+                  className="text-muted-foreground p-7 text-center"
                 >
                   {emptyMessage}
                 </TableCell>
@@ -236,12 +236,12 @@ function DataTable<TData extends RowData>({
                   ))}
                   {isInteractive && (
                     <>
-                      <TableCell className="w-0 text-muted-foreground">
+                      <TableCell className="text-muted-foreground w-0">
                         <ArrowRight className="size-4" />
                       </TableCell>
                       {removeRow && (
                         <TableCell
-                          className="w-0 text-muted-foreground"
+                          className="text-muted-foreground w-0"
                           onClick={(event) => {
                             event.stopPropagation();
                             removeRow?.(row.original);
@@ -264,7 +264,7 @@ function DataTable<TData extends RowData>({
           aria-label="Pagination"
           className="flex items-center justify-between gap-4"
         >
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Page {page} of {pageCount}
           </p>
           <div className="flex items-center gap-2">

@@ -32,10 +32,10 @@ export const FilterSidebar = () => {
     });
 
   return (
-    <aside className="sticky top-16 flex flex-col gap-4 pt-6 pb-12 px-6 bg-white shadow-lg">
+    <aside className="sticky top-16 flex flex-col gap-4 bg-white px-6 pt-6 pb-12 shadow-lg">
       {groups.map(({ key, label }) => (
         <fieldset key={key} className="flex flex-col gap-1">
-          <legend className="font-medium mb-1">{label}</legend>
+          <legend className="mb-1 font-medium">{label}</legend>
           {data[key].map((name) => (
             <Label key={name} className="flex items-center gap-2">
               <input

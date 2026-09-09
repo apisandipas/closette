@@ -30,7 +30,7 @@ export const ItemFields = withForm({
             )}
           </form.AppField>
 
-          <div className="gap-4 grid grid-cols-2">
+          <div className="grid grid-cols-2 gap-4">
             <form.AppField name="brandId">
               {(field) => (
                 <field.SelectField
@@ -62,7 +62,7 @@ export const ItemFields = withForm({
               {(field) => <field.ColorField label="Color" />}
             </form.AppField>
           </div>
-          <div className="gap-4 grid grid-cols-2">
+          <div className="grid grid-cols-2 gap-4">
             <form.AppField name="quantity">
               {(field) => <field.NumberField label="Quantity" />}
             </form.AppField>
@@ -73,8 +73,8 @@ export const ItemFields = withForm({
         </FieldGroup>
       </TabsContent>
       <TabsContent value="image">
-        <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
-          <div className="gap-4 grid- grid-cols-1">
+        <div className="bg-card text-card-foreground rounded-lg border p-6 shadow-sm">
+          <div className="grid- grid-cols-1 gap-4">
             <form.AppField name="image">
               {(field) => (
                 <field.ImageField label="Photo" currentUrl={currentImageUrl} />

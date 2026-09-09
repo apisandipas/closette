@@ -16,13 +16,13 @@ const links: SidebarLinks[] = [
 
 const Sidebar = () => {
   return (
-    <div className="sticky top-16 flex flex-col gap-4 pt-6 pb-12 px-6 bg-white shadow-lg">
+    <div className="sticky top-16 flex flex-col gap-4 bg-white px-6 pt-6 pb-12 shadow-lg">
       {links.map(({ route, label, icon: Icon }) => {
         return (
           <Link
             key={route}
             to={route}
-            className="p-6 rounded-lg text-md flex gap-4"
+            className="text-md flex gap-4 rounded-lg p-6"
             activeProps={{
               className: "text-red-400 bg-primary text-white font-bold",
             }}

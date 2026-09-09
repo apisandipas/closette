@@ -32,7 +32,7 @@ function RouteComponent() {
   return (
     <Dialog open onOpenChange={(open) => !open && close()}>
       <DialogContent className="max-w-2xl">
-        <div className="grid grid-cols-[16rem_1fr] gap-6 min-h-72">
+        <div className="grid min-h-72 grid-cols-[16rem_1fr] gap-6">
           {it.imageUrl && (
             <img
               src={it.imageUrl}

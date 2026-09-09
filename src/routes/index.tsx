@@ -9,7 +9,7 @@ function Home() {
   return (
     <div className="flex h-dvh items-center justify-center">
       <Link to="/dashboard">
-        <div className="flex gap-4 font-bold text-xl jusity-center items-center font-heading">
+        <div className="jusity-center font-heading flex items-center gap-4 text-xl font-bold">
           <Rabbit size={36} />
           Closette
         </div>

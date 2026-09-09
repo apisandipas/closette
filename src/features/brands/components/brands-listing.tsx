@@ -1,4 +1,3 @@
-
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
 import { brandsQueryOptions } from "../api/queries";

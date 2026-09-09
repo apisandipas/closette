@@ -84,7 +84,7 @@ export function SelectField({
         value={field.state.value}
         onChange={(e) => field.handleChange(e.target.value)}
         onBlur={field.handleBlur}
-        className="h-9 w-full min-w-0 rounded-3xl border border-transparent bg-input/50 px-3 py-1 text-base outline-none transition-[color,box-shadow,background-color] focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30 md:text-sm"
+        className="bg-input/50 focus-visible:border-ring focus-visible:ring-ring/30 h-9 w-full min-w-0 rounded-3xl border border-transparent px-3 py-1 text-base transition-[color,box-shadow,background-color] outline-none focus-visible:ring-3 md:text-sm"
       >
         <option value="">{placeholder}</option>
         {options?.map(({ id, name }) => (
@@ -117,7 +117,7 @@ export function ColorField({ label }: { label: string }) {
     <Field>
       <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
       <Popover>
-        <div className="flex h-9 w-full items-center gap-2 rounded-3xl border border-transparent bg-input/50 px-3 transition-[color,box-shadow,background-color] focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/30">
+        <div className="bg-input/50 focus-within:border-ring focus-within:ring-ring/30 flex h-9 w-full items-center gap-2 rounded-3xl border border-transparent px-3 transition-[color,box-shadow,background-color] focus-within:ring-3">
           {/* rendered current color */}
           <span
             aria-hidden="true"
@@ -136,7 +136,7 @@ export function ColorField({ label }: { label: string }) {
           {/* picker trigger */}
           <PopoverTrigger
             aria-label="Pick a color"
-            className="shrink-0 text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground shrink-0"
           >
             <PipetteIcon className="size-4" />
           </PopoverTrigger>
@@ -244,7 +244,7 @@ export function ImageField({
       {busy && <p className="text-muted-foreground text-sm">Uploading…</p>}
       {error && <p className="text-destructive text-sm">{error}</p>}
       {shown && (
-        <div className="flex justify-center items-center gap-3">
+        <div className="flex items-center justify-center gap-3">
           <Button type="button" variant="ghost" size="sm" onClick={clearImage}>
             Remove
           </Button>

@@ -17,7 +17,6 @@ export function UserDropdown({ userName }: { userName: string | undefined }) {
     navigate({ to: "/admin" });
   };
 
-  
   const signOut = async () => {
     await authClient.signOut();
     navigate({ to: "/login" });
@@ -27,7 +26,7 @@ export function UserDropdown({ userName }: { userName: string | undefined }) {
     <DropdownMenu>
       <DropdownMenuTrigger render={<Button variant="outline" />}>
         {userName ? (
-          <div className="flex flex-row gap-3 pr-4 justify-center items-center">
+          <div className="flex flex-row items-center justify-center gap-3 pr-4">
             <User />
             {userName}
           </div>

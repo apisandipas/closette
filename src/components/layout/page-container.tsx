@@ -3,15 +3,15 @@ import { Plus } from "lucide-react";
 
 function PageSkeleton() {
   return (
-    <div className="flex flex-col flex-1 gap-4 p-4 md:px-6 animate-pulse">
-      <div className="flex justify-between items-center">
+    <div className="flex flex-1 animate-pulse flex-col gap-4 p-4 md:px-6">
+      <div className="flex items-center justify-between">
         <div>
-          <div className="bg-muted mb-2 rounded w-48 h-8" />
-          <div className="bg-muted rounded w-96 h-4" />
+          <div className="bg-muted mb-2 h-8 w-48 rounded" />
+          <div className="bg-muted h-4 w-96 rounded" />
         </div>
       </div>
-      <div className="bg-muted mt-6 rounded-lg w-full h-40" />
-      <div className="bg-muted rounded-lg w-full h-40" />
+      <div className="bg-muted mt-6 h-40 w-full rounded-lg" />
+      <div className="bg-muted h-40 w-full rounded-lg" />
     </div>
   );
 }
@@ -33,10 +33,10 @@ export default function PageContainer({
   const hasHeader = pageTitle || pageHeaderAction;
   const content = isLoading ? <PageSkeleton /> : children;
   return (
-    <section className="flex flex-col item-center mb-6">
+    <section className="item-center mb-6 flex flex-col">
       {hasHeader && (
-        <header className="flex items-center mb-6 border-1">
-          <h1 className="font-sans font-bold text-4xl">{pageTitle}</h1>
+        <header className="mb-6 flex items-center border-1">
+          <h1 className="font-sans text-4xl font-bold">{pageTitle}</h1>
           {pageHeaderAction && (
             <div className="ml-auto">{pageHeaderAction}</div>
           )}
