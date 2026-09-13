@@ -36,11 +36,13 @@ function hexToHsl(hex: string): [h: number, s: number, l: number] {
   return [h, s, l];
 }
 
-// Neutrals first (they have no useful hue), then hue bins. Brown and beige
-// are carved out of the red/orange/yellow bins by lightness and saturation.
+// Neutrals first (they have no useful hue), then hue bins. Brown is carved out
+// of the warm bins by lightness and saturation; beige by lightness and chroma
+// (HSL saturation is unreliable near white, so use the raw channel spread).
 export function hexToFamily(hex: string): ColorFamily | null {
   if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return null;
   const [h, s, l] = hexToHsl(hex);
+  const chroma = s * (1 - Math.abs(2 * l - 1));
 
   if (l < 0.12) return "black";
   if (l > 0.92 && s < 0.2) return "white";
@@ -48,7 +50,7 @@ export function hexToFamily(hex: string): ColorFamily | null {
 
   const warm = h < 60 || h >= 340;
   if (warm && l < 0.4 && s < 0.7) return "brown";
-  if (h >= 20 && h < 70 && l > 0.7 && s < 0.5) return "beige";
+  if (h >= 20 && h < 70 && l > 0.7 && chroma < 0.3) return "beige";
 
   if (h < 15 || h >= 340) return "red";
   if (h < 45) return "orange";
