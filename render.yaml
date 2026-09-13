@@ -2,12 +2,16 @@ services:
   - type: web
     name: closette
     runtime: node
+    repo: https://github.com/apisandipas/closette
     plan: starter
-    region: oregon
+    region: ohio
     branch: main
-    buildCommand: npm ci && npm run db:migrate && npm run build
+    buildCommand: npm ci && npm run build
+    preDeployCommand: npm run db:migrate
     startCommand: npm start
     healthCheckPath: /
+    domains:
+      - closette.fit
     envVars:
       - key: NODE_VERSION
         value: "24"
@@ -32,5 +36,6 @@ services:
 
 databases:
   - name: closette-db
+    region: ohio
     plan: basic-256mb
     postgresMajorVersion: "17"
