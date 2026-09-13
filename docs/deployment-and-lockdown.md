@@ -201,8 +201,10 @@ curl -X POST https://closette.onrender.com/api/auth/sign-up/email \
 That request creates an account, and because `_protected` gates on _any_ valid
 session, that account sees the entire wardrobe.
 
-So: do the route move — it is correct as UX and it removes the discovery
-surface — but the enforcement belongs in `src/lib/auth/index.ts`.
+So: gating the route is still worth doing — it removes the discovery surface
+and spares a logged-out visitor a form that will refuse them — but the
+enforcement belongs in `src/lib/auth/index.ts`. And the gate cannot simply be
+`_protected`; see "The route move and the bootstrap escape conflict" below.
 
 ### Good news: the data layer is already correct
 
@@ -250,8 +252,10 @@ you specifically wanted the invite-a-friend path to not require a deploy.
 
 ### Option B — require a session to sign anyone up
 
-This makes the `_protected` route move _real_: the form is behind a login and
-so is the endpoint.
+This is the rule you actually want: the first account is allowed because none
+exists yet, and every account after that has to be created by someone already
+signed in. It also makes gating the route _real_ rather than cosmetic — the
+form is hidden and the endpoint is closed.
 
 **Verified** in 1.6.25:
 
@@ -321,18 +325,74 @@ it is a self-reference into a binding that does not exist yet.
   a seed script calling `auth.api.signUpEmail()` is subject to the same rule —
   which is fine given the empty-table escape, but do not expect a server-side
   script to bypass it.
-- **Verify the `user` table export name** in `src/lib/db/schema.ts`. The import
-  above is a guess.
+- **The `user` table import is correct.** **Verified**:
+  `src/lib/db/auth-schema.ts:4` exports `user`, re-exported through
+  `src/lib/db/schema.ts`, so `import { user } from "../db/schema"` resolves as
+  written.
 - **The count query runs on every signup attempt.** Irrelevant at this scale.
 - **Test the bootstrap path against a genuinely empty table**, not your dev
   database. The failure mode — deploying a rule nobody can satisfy — only
   shows up on a fresh database, which is exactly what production is.
+
+#### The route move and the bootstrap escape conflict
+
+These two pieces of the plan interact, and the interaction is easy to miss
+because they are listed separately below.
+
+If `/signup` moves under `_protected`, the first user cannot reach the form —
+`_protected` redirects anyone without a session to `/login`. So the bootstrap
+escape in the hook, which exists precisely to let that first account be
+created, becomes unreachable through the UI. The endpoint would allow the
+signup; the router would never let you see the form that calls it.
+
+Three ways out, in descending order of how much I like them:
+
+1. **Mirror the rule in the route.** The route guard should ask the same
+   question the hook does: allow when no users exist, or when signed in. That
+   needs a small server function the route can call from `beforeLoad`:
+
+   ```ts
+   // src/lib/auth/functions.ts — sketch
+   export const isSignupOpen = createServerFn({ method: "GET" }).handler(
+     async () => {
+       const headers = getRequestHeaders();
+       const session = await auth.api.getSession({ headers });
+       if (session) return true;
+
+       const [{ value: existing }] = await db
+         .select({ value: count() })
+         .from(user);
+       return existing === 0;
+     },
+   );
+   ```
+
+   Then `/signup` stays a top-level route with its own `beforeLoad` calling
+   `isSignupOpen()` and redirecting to `/login` when false — rather than moving
+   under `_protected` at all. Note this server function deliberately does _not_
+   use `ensureSession()`, since it must be callable with no session.
+
+2. **Leave `/signup` public.** The hook is the real enforcement; an anonymous
+   visitor just gets a 403 from the form instead of a redirect. Slightly worse
+   UX, zero extra code, and no way to lock yourself out.
+
+3. **Move it under `_protected` and bootstrap out of band** — create the first
+   account with a one-off script or by hand against the database, then never
+   think about it again. Fine if you would rather not write option 1.
+
+What does **not** work is moving `/signup` under `_protected` and relying on
+the hook's empty-table escape to let you in. Those two cancel out.
 
 ### Recommendation
 
 Option B, with Option A as the fallback if the hook fights you. Option B is
 maybe fifteen lines and it is the difference between "the form is hidden" and
 "the endpoint is closed."
+
+For the route, option 1 above — a public `/signup` route with its own
+`isSignupOpen` guard. It is the only arrangement where the UI and the endpoint
+answer the same question, which is what makes the whole thing legible six
+months from now.
 
 ### The rest of the hardening
 
@@ -359,10 +419,11 @@ In order of how much each actually matters:
    `options.rateLimit?.enabled ?? isProduction`, so it is on in production
    without configuration. Nothing to do. Noted here so nobody "fixes" it twice.
 
-6. **Move `/signup` under `_protected`** — the UX half. With Option B in place
-   this is genuinely consistent rather than theatre. Worth adding a
-   `beforeLoad` redirect so a logged-out visitor gets `/login` instead of a
-   form that will refuse them.
+6. **Gate the `/signup` route** — the UX half, so a logged-out visitor gets
+   `/login` instead of a form that will refuse them. Do this with an
+   `isSignupOpen` guard rather than by moving the route under `_protected`;
+   see "The route move and the bootstrap escape conflict" above for why the
+   obvious version locks you out of your own first signup.
 
 ### Open question, not a security issue
 
@@ -383,7 +444,8 @@ publicly reachable the moment it deploys — which, on Render, it will be.
 2. Fix the `dotenv` import.
 3. Bump `minPasswordLength` to 12 on both client and server.
 4. Add the signup hook (Option B) with the empty-table bootstrap.
-5. Move `/signup` under `_protected` with a redirect.
+5. Add `isSignupOpen` and guard `/signup` with it. Do **not** move the route
+   under `_protected` — that would block the bootstrap signup in step 8.
 6. Add `trustedOrigins`.
 7. Commit `render.yaml`; create the Render Postgres; fill the `sync: false`
    vars.
