@@ -17,9 +17,11 @@ pkgs.mkShell {
     # Define local data and socket directories inside the project
     export PGDATA="$PWD/.direnv/postgres"
     export PGSOCK="$PWD/.direnv/postgres_sockets"
+    # 5432 is taken by the system-wide postgresql.service on this machine
+    export PGPORT=5433
 
     # Drizzle-compatible connection string
-    export DATABASE_URL="postgres://postgres:postgres@localhost:5432/dev_db"
+    export DATABASE_URL="postgres://postgres:postgres@localhost:$PGPORT/dev_db"
 
     # Absolute path, captured at entry, so the helpers work from any directory
     export DUMPFILE="$PWD/db/dev_db.sql"
@@ -39,7 +41,7 @@ pkgs.mkShell {
 
     # Start PostgreSQL locally on shell entry
     echo "Starting PostgreSQL..."
-    pg_ctl -o "-k $PGSOCK" -l "$PGDATA/server.log" start
+    pg_ctl -o "-k $PGSOCK -p $PGPORT" -l "$PGDATA/server.log" start
 
     # Create the target application database if it doesn't exist yet
     sleep 1
@@ -101,7 +103,7 @@ pkgs.mkShell {
     echo "⚡ Nix Development Environment Active ⚡"
     echo "------------------------------------"
     echo "Node.js version: $(node -v)"
-    echo "PostgreSQL:      Running on localhost:5432"
+    echo "PostgreSQL:      Running on localhost:$PGPORT"
     echo "Database URL:    $DATABASE_URL"
     echo "db-dump          Write the live database to db/dev_db.sql"
     echo "db-restore       Load db/dev_db.sql over the live database"

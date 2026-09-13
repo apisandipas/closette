@@ -17,6 +17,7 @@ import {
   verifyUpload,
 } from "@/lib/storage";
 import { searchFiltersSchema } from "@/features/common";
+import { hexToFamily } from "@/lib/color";
 
 export const getItems = createServerFn({ method: "GET" })
   .validator(searchFiltersSchema)
@@ -127,7 +128,11 @@ export const createItem = createServerFn({ method: "POST" })
 
     const [created] = await db
       .insert(item)
-      .values({ ...data, userId: user.id })
+      .values({
+        ...data,
+        userId: user.id,
+        colorFamily: hexToFamily(data.color),
+      })
       .returning();
 
     return { item: created };
@@ -153,7 +158,11 @@ export const updateItem = createServerFn({ method: "POST" })
 
     const [updated] = await db
       .update(item)
-      .set(changes)
+      .set(
+        changes.color === undefined
+          ? changes
+          : { ...changes, colorFamily: hexToFamily(changes.color) },
+      )
       .where(and(eq(item.id, id), eq(item.userId, user.id)))
       .returning();
 
@@ -171,7 +180,7 @@ export const updateItem = createServerFn({ method: "POST" })
 export const deleteItem = createServerFn({ method: "POST" })
   .validator(
     z.object({
-      id: z.string().uuid(),
+      id: z.uuid(),
     }),
   )
   .handler(async ({ data: { id } }) => {

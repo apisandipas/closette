@@ -2,16 +2,17 @@ import { ensureSession } from "@/lib/auth/functions";
 import { db } from "@/lib/db";
 import { brand, closet, itemType } from "@/lib/db/schema";
 import { createServerFn } from "@tanstack/react-start";
-import { and, asc, desc, eq, inArray } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, isNotNull } from "drizzle-orm";
 import { item } from "@/lib/db/schema";
 import { presignDownload } from "@/lib/storage";
 import { dashboardFiltersSchema } from "./types";
+import { colorFamilies as allColorFamilies } from "@/lib/color";
 
 export const getDashboardFilters = createServerFn({ method: "GET" }).handler(
   async () => {
     const { user } = await ensureSession();
 
-    const [brands, types, closetNames] = await Promise.all([
+    const [brands, types, closetNames, families] = await Promise.all([
       db.query.brand.findMany({
         columns: { name: true },
         where: eq(brand.userId, user.id),
@@ -27,19 +28,26 @@ export const getDashboardFilters = createServerFn({ method: "GET" }).handler(
         where: eq(closet.userId, user.id),
         orderBy: asc(closet.name),
       }),
+      db
+        .selectDistinct({ family: item.colorFamily })
+        .from(item)
+        .where(and(eq(item.userId, user.id), isNotNull(item.colorFamily))),
     ]);
 
     return {
       brands: brands.map(({ name }) => name),
       types: types.map(({ name }) => name),
       closetNames: closetNames.map(({ name }) => name),
+      colorFamilies: allColorFamilies.filter((f) =>
+        families.some(({ family }) => family === f),
+      ),
     };
   },
 );
 
 export const getDashboardItems = createServerFn({ method: "GET" })
   .validator(dashboardFiltersSchema)
-  .handler(async ({ data: { brands, types, closetNames } }) => {
+  .handler(async ({ data: { brands, types, closetNames, colorFamilies } }) => {
     const { user } = await ensureSession();
 
     const where = and(
@@ -82,6 +90,9 @@ export const getDashboardItems = createServerFn({ method: "GET" })
                 ),
               ),
           )
+        : undefined,
+      colorFamilies.length
+        ? inArray(item.colorFamily, colorFamilies)
         : undefined,
     );
 

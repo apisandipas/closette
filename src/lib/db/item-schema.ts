@@ -7,8 +7,9 @@ import {
   timestamp,
   unique,
   uuid,
+  pgEnum,
 } from "drizzle-orm/pg-core";
-
+import { colorFamilies } from "@/lib/color";
 import { user } from "./auth-schema";
 
 export const closet = pgTable(
@@ -77,6 +78,8 @@ export const itemType = pgTable(
   ],
 );
 
+export const colorFamilyEnum = pgEnum("color_family", colorFamilies);
+
 export const item = pgTable(
   "items",
   {
@@ -88,6 +91,7 @@ export const item = pgTable(
     image: text("image"),
     year: integer("year").default(1959).notNull(),
     color: text("color"),
+    colorFamily: colorFamilyEnum("color_family"),
     quantity: integer("quantity").default(1).notNull(),
     closetId: uuid("closet_id").references(() => closet.id, {
       onDelete: "set null",
@@ -111,6 +115,7 @@ export const item = pgTable(
     index("items_closetId_idx").on(table.closetId),
     index("items_typeId_idx").on(table.typeId),
     index("items_brandId_idx").on(table.brandId),
+    index("items_colorFamily_idx").on(table.colorFamily),
   ],
 );
 

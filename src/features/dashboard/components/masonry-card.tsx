@@ -9,11 +9,11 @@ export const MasonryCard = ({ data }: MasonryCardProps) => (
     params={{ itemId: data.id }}
     search={(prev) => prev}
   >
-    <div className="overflow-hidden rounded-lg bg-white shadow">
+    <div className="overflow-hidden rounded-lg bg-white p-4 shadow">
       {data.imageUrl && (
         <img src={data.imageUrl} alt={data.name} className="w-full" />
       )}
-      <div className="p-2 text-sm">{data.name}</div>
+      <div className="pt-6 text-sm">{data.name}</div>
     </div>
   </Link>
 );

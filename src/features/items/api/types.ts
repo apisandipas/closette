@@ -26,6 +26,7 @@ export const insertItemSchema = createInsertSchema(item)
     userId: true,
     createdAt: true,
     updatedAt: true,
+    colorFamily: true,
   })
   .extend({
     color: hexColorSchema,

@@ -21,6 +21,14 @@ const MasonrySkeleton = ({ count }: { count: number }) => (
 export const MasonryComponent = () => {
   const search = route.useSearch();
   const { data } = useSuspenseQuery(dashboardQueryOptions(search));
+
+  if (data.length === 0) {
+    return (
+      <div className="text-forground/30 flex items-center justify-center p-24">
+        <p className="text-2xl font-bold">No closet items found.</p>
+      </div>
+    );
+  }
   return (
     <ClientOnly
       fallback={<MasonrySkeleton count={Math.min(data.length, 12)} />}
