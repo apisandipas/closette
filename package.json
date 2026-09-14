@@ -51,6 +51,7 @@
     "drizzle-orm": "^0.45.2",
     "drizzle-zod": "^0.8.3",
     "lucide-react": "^1.26.0",
+    "mailtrap": "^4.10.0",
     "masonic": "^4.1.0",
     "nitro": "^3.0.260903-beta",
     "postgres": "^3.4.9",

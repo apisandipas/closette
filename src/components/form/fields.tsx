@@ -29,9 +29,13 @@ function FieldErrors() {
 export function TextField({
   label,
   placeholder,
+  type,
+  autoComplete,
 }: {
   label: string;
   placeholder?: string;
+  type?: React.HTMLInputTypeAttribute;
+  autoComplete?: string;
 }) {
   const field = useFieldContext<string>();
   return (
@@ -39,6 +43,8 @@ export function TextField({
       <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
       <Input
         id={field.name}
+        type={type}
+        autoComplete={autoComplete}
         value={field.state.value}
         onChange={(e) => field.handleChange(e.target.value)}
         onBlur={field.handleBlur}

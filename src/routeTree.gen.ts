@@ -11,18 +11,24 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProtectedRouteImport } from './routes/_protected'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ProtectedAdminRouteRouteImport } from './routes/_protected/admin/route'
 import { Route as ProtectedDashboardRouteRouteImport } from './routes/_protected/dashboard/route'
+import { Route as ProtectedUsersRouteRouteImport } from './routes/_protected/users/route'
 import { Route as ProtectedAdminIndexRouteImport } from './routes/_protected/admin/index'
 import { Route as ProtectedDashboardIndexRouteImport } from './routes/_protected/dashboard/index'
 import { Route as ProtectedDashboardItemIdRouteImport } from './routes/_protected/dashboard/$itemId'
+import { Route as ProtectedUsersIndexRouteImport } from './routes/_protected/users/index'
+import { Route as ProtectedUsersNewRouteImport } from './routes/_protected/users/new'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ProtectedAdminBrandsListRouteImport } from './routes/_protected/admin/brands/_list'
 import { Route as ProtectedAdminClosetsListRouteImport } from './routes/_protected/admin/closets/_list'
 import { Route as ProtectedAdminItemsListRouteImport } from './routes/_protected/admin/items/_list'
 import { Route as ProtectedAdminTypesListRouteImport } from './routes/_protected/admin/types/_list'
+import { Route as ProtectedUsersUserIdEditRouteImport } from './routes/_protected/users/$userId/edit'
 import { Route as ProtectedAdminBrandsListIndexRouteImport } from './routes/_protected/admin/brands/_list/index'
 import { Route as ProtectedAdminBrandsListNewRouteImport } from './routes/_protected/admin/brands/_list/new'
 import { Route as ProtectedAdminClosetsListIndexRouteImport } from './routes/_protected/admin/closets/_list/index'
@@ -45,9 +51,19 @@ const ProtectedRoute = ProtectedRouteImport.update({
   id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignupRoute = SignupRouteImport.update({
@@ -63,6 +79,11 @@ const ProtectedAdminRouteRoute = ProtectedAdminRouteRouteImport.update({
 const ProtectedDashboardRouteRoute = ProtectedDashboardRouteRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedUsersRouteRoute = ProtectedUsersRouteRouteImport.update({
+  id: '/users',
+  path: '/users',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedAdminIndexRoute = ProtectedAdminIndexRouteImport.update({
@@ -81,6 +102,16 @@ const ProtectedDashboardItemIdRoute =
     path: '/$itemId',
     getParentRoute: () => ProtectedDashboardRouteRoute,
   } as any)
+const ProtectedUsersIndexRoute = ProtectedUsersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProtectedUsersRouteRoute,
+} as any)
+const ProtectedUsersNewRoute = ProtectedUsersNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => ProtectedUsersRouteRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -108,6 +139,12 @@ const ProtectedAdminTypesListRoute = ProtectedAdminTypesListRouteImport.update({
   path: '/types',
   getParentRoute: () => ProtectedAdminRouteRoute,
 } as any)
+const ProtectedUsersUserIdEditRoute =
+  ProtectedUsersUserIdEditRouteImport.update({
+    id: '/$userId/edit',
+    path: '/$userId/edit',
+    getParentRoute: () => ProtectedUsersRouteRoute,
+  } as any)
 const ProtectedAdminBrandsListIndexRoute =
   ProtectedAdminBrandsListIndexRouteImport.update({
     id: '/',
@@ -183,18 +220,24 @@ const ProtectedAdminTypesListTypeIdEditRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/admin': typeof ProtectedAdminRouteRouteWithChildren
   '/dashboard': typeof ProtectedDashboardRouteRouteWithChildren
+  '/users': typeof ProtectedUsersRouteRouteWithChildren
   '/dashboard/$itemId': typeof ProtectedDashboardItemIdRoute
+  '/users/new': typeof ProtectedUsersNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/admin/': typeof ProtectedAdminIndexRoute
   '/dashboard/': typeof ProtectedDashboardIndexRoute
+  '/users/': typeof ProtectedUsersIndexRoute
   '/admin/brands': typeof ProtectedAdminBrandsListRouteWithChildren
   '/admin/closets': typeof ProtectedAdminClosetsListRouteWithChildren
   '/admin/items': typeof ProtectedAdminItemsListRouteWithChildren
   '/admin/types': typeof ProtectedAdminTypesListRouteWithChildren
+  '/users/$userId/edit': typeof ProtectedUsersUserIdEditRoute
   '/admin/brands/new': typeof ProtectedAdminBrandsListNewRoute
   '/admin/closets/new': typeof ProtectedAdminClosetsListNewRoute
   '/admin/items/new': typeof ProtectedAdminItemsListNewRoute
@@ -210,12 +253,17 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/dashboard/$itemId': typeof ProtectedDashboardItemIdRoute
+  '/users/new': typeof ProtectedUsersNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/admin': typeof ProtectedAdminIndexRoute
   '/dashboard': typeof ProtectedDashboardIndexRoute
+  '/users': typeof ProtectedUsersIndexRoute
+  '/users/$userId/edit': typeof ProtectedUsersUserIdEditRoute
   '/admin/brands/new': typeof ProtectedAdminBrandsListNewRoute
   '/admin/closets/new': typeof ProtectedAdminClosetsListNewRoute
   '/admin/items/new': typeof ProtectedAdminItemsListNewRoute
@@ -233,18 +281,24 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_protected': typeof ProtectedRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/_protected/admin': typeof ProtectedAdminRouteRouteWithChildren
   '/_protected/dashboard': typeof ProtectedDashboardRouteRouteWithChildren
+  '/_protected/users': typeof ProtectedUsersRouteRouteWithChildren
   '/_protected/dashboard/$itemId': typeof ProtectedDashboardItemIdRoute
+  '/_protected/users/new': typeof ProtectedUsersNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_protected/admin/': typeof ProtectedAdminIndexRoute
   '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
+  '/_protected/users/': typeof ProtectedUsersIndexRoute
   '/_protected/admin/brands/_list': typeof ProtectedAdminBrandsListRouteWithChildren
   '/_protected/admin/closets/_list': typeof ProtectedAdminClosetsListRouteWithChildren
   '/_protected/admin/items/_list': typeof ProtectedAdminItemsListRouteWithChildren
   '/_protected/admin/types/_list': typeof ProtectedAdminTypesListRouteWithChildren
+  '/_protected/users/$userId/edit': typeof ProtectedUsersUserIdEditRoute
   '/_protected/admin/brands/_list/new': typeof ProtectedAdminBrandsListNewRoute
   '/_protected/admin/closets/_list/new': typeof ProtectedAdminClosetsListNewRoute
   '/_protected/admin/items/_list/new': typeof ProtectedAdminItemsListNewRoute
@@ -262,18 +316,24 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/forgot-password'
     | '/login'
+    | '/reset-password'
     | '/signup'
     | '/admin'
     | '/dashboard'
+    | '/users'
     | '/dashboard/$itemId'
+    | '/users/new'
     | '/api/auth/$'
     | '/admin/'
     | '/dashboard/'
+    | '/users/'
     | '/admin/brands'
     | '/admin/closets'
     | '/admin/items'
     | '/admin/types'
+    | '/users/$userId/edit'
     | '/admin/brands/new'
     | '/admin/closets/new'
     | '/admin/items/new'
@@ -289,12 +349,17 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/forgot-password'
     | '/login'
+    | '/reset-password'
     | '/signup'
     | '/dashboard/$itemId'
+    | '/users/new'
     | '/api/auth/$'
     | '/admin'
     | '/dashboard'
+    | '/users'
+    | '/users/$userId/edit'
     | '/admin/brands/new'
     | '/admin/closets/new'
     | '/admin/items/new'
@@ -311,18 +376,24 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_protected'
+    | '/forgot-password'
     | '/login'
+    | '/reset-password'
     | '/signup'
     | '/_protected/admin'
     | '/_protected/dashboard'
+    | '/_protected/users'
     | '/_protected/dashboard/$itemId'
+    | '/_protected/users/new'
     | '/api/auth/$'
     | '/_protected/admin/'
     | '/_protected/dashboard/'
+    | '/_protected/users/'
     | '/_protected/admin/brands/_list'
     | '/_protected/admin/closets/_list'
     | '/_protected/admin/items/_list'
     | '/_protected/admin/types/_list'
+    | '/_protected/users/$userId/edit'
     | '/_protected/admin/brands/_list/new'
     | '/_protected/admin/closets/_list/new'
     | '/_protected/admin/items/_list/new'
@@ -340,7 +411,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProtectedRoute: typeof ProtectedRouteWithChildren
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -361,11 +434,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/signup': {
@@ -389,6 +476,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDashboardRouteRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/users': {
+      id: '/_protected/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof ProtectedUsersRouteRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/admin/': {
       id: '/_protected/admin/'
       path: '/'
@@ -409,6 +503,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/$itemId'
       preLoaderRoute: typeof ProtectedDashboardItemIdRouteImport
       parentRoute: typeof ProtectedDashboardRouteRoute
+    }
+    '/_protected/users/': {
+      id: '/_protected/users/'
+      path: '/'
+      fullPath: '/users/'
+      preLoaderRoute: typeof ProtectedUsersIndexRouteImport
+      parentRoute: typeof ProtectedUsersRouteRoute
+    }
+    '/_protected/users/new': {
+      id: '/_protected/users/new'
+      path: '/new'
+      fullPath: '/users/new'
+      preLoaderRoute: typeof ProtectedUsersNewRouteImport
+      parentRoute: typeof ProtectedUsersRouteRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -444,6 +552,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/types'
       preLoaderRoute: typeof ProtectedAdminTypesListRouteImport
       parentRoute: typeof ProtectedAdminRouteRoute
+    }
+    '/_protected/users/$userId/edit': {
+      id: '/_protected/users/$userId/edit'
+      path: '/$userId/edit'
+      fullPath: '/users/$userId/edit'
+      preLoaderRoute: typeof ProtectedUsersUserIdEditRouteImport
+      parentRoute: typeof ProtectedUsersRouteRoute
     }
     '/_protected/admin/brands/_list/': {
       id: '/_protected/admin/brands/_list/'
@@ -643,14 +758,31 @@ const ProtectedDashboardRouteRouteWithChildren =
     ProtectedDashboardRouteRouteChildren,
   )
 
+interface ProtectedUsersRouteRouteChildren {
+  ProtectedUsersNewRoute: typeof ProtectedUsersNewRoute
+  ProtectedUsersIndexRoute: typeof ProtectedUsersIndexRoute
+  ProtectedUsersUserIdEditRoute: typeof ProtectedUsersUserIdEditRoute
+}
+
+const ProtectedUsersRouteRouteChildren: ProtectedUsersRouteRouteChildren = {
+  ProtectedUsersNewRoute: ProtectedUsersNewRoute,
+  ProtectedUsersIndexRoute: ProtectedUsersIndexRoute,
+  ProtectedUsersUserIdEditRoute: ProtectedUsersUserIdEditRoute,
+}
+
+const ProtectedUsersRouteRouteWithChildren =
+  ProtectedUsersRouteRoute._addFileChildren(ProtectedUsersRouteRouteChildren)
+
 interface ProtectedRouteChildren {
   ProtectedAdminRouteRoute: typeof ProtectedAdminRouteRouteWithChildren
   ProtectedDashboardRouteRoute: typeof ProtectedDashboardRouteRouteWithChildren
+  ProtectedUsersRouteRoute: typeof ProtectedUsersRouteRouteWithChildren
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAdminRouteRoute: ProtectedAdminRouteRouteWithChildren,
   ProtectedDashboardRouteRoute: ProtectedDashboardRouteRouteWithChildren,
+  ProtectedUsersRouteRoute: ProtectedUsersRouteRouteWithChildren,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
@@ -660,7 +792,9 @@ const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProtectedRoute: ProtectedRouteWithChildren,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

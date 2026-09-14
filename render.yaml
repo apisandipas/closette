@@ -37,6 +37,10 @@ services:
         sync: false
       - key: B2_REGION
         sync: false
+      - key: MAILTRAP_TOKEN
+        sync: false
+      - key: MAILTRAP_FROM
+        sync: false
 
 databases:
   - name: closette-db

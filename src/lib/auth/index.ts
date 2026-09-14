@@ -3,8 +3,10 @@ import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { db } from "../db";
 import { createAuthMiddleware, getSessionFromCtx } from "better-auth/api";
+import { admin } from "better-auth/plugins";
 import { count } from "drizzle-orm";
 import { user } from "../db/auth-schema";
+import { sendMail } from "../mail";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -13,8 +15,29 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 12,
+    sendResetPassword: ({ user, url }) =>
+      sendMail(
+        user.email,
+        "Reset your Closette password",
+        `Set a new password here: ${url}\n\nThe link expires in an hour. If you did not ask for this, ignore this email.`,
+      ),
   },
   trustedOrigins: [process.env.BETTER_AUTH_URL!],
+  databaseHooks: {
+    user: {
+      create: {
+        // The bootstrap account is the first admin.
+        before: async (data) => {
+          const [{ value: existing }] = await db
+            .select({ value: count() })
+            .from(user);
+          return existing === 0
+            ? { data: { ...data, role: "admin" } }
+            : undefined;
+        },
+      },
+    },
+  },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
       if (ctx.path !== "/sign-up/email") return;
@@ -35,5 +58,8 @@ export const auth = betterAuth({
       }
     }),
   },
-  plugins: [tanstackStartCookies()],
+  plugins: [
+    admin({ defaultRole: "user", adminRoles: ["admin"] }),
+    tanstackStartCookies(), // must stay last
+  ],
 });

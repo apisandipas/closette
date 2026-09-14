@@ -10,7 +10,13 @@ import {
 import { useNavigate } from "@tanstack/react-router";
 import { authClient } from "@/lib/auth/auth-client";
 
-export function UserDropdown({ userName }: { userName: string | undefined }) {
+export function UserDropdown({
+  userName,
+  isAdmin = false,
+}: {
+  userName: string | undefined;
+  isAdmin?: boolean;
+}) {
   const navigate = useNavigate();
 
   const goToAdmin = async () => {
@@ -36,6 +42,11 @@ export function UserDropdown({ userName }: { userName: string | undefined }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         <DropdownMenuItem onClick={goToAdmin}>Admin</DropdownMenuItem>
+        {isAdmin && (
+          <DropdownMenuItem onClick={() => navigate({ to: "/users" })}>
+            Users
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={signOut}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

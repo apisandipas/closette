@@ -11,6 +11,10 @@ export const env = createEnv({
     B2_BUCKET: z.string(),
     B2_ENDPOINT: z.url(),
     B2_REGION: z.string(),
+    MAILTRAP_TOKEN: z.string(),
+    MAILTRAP_FROM: z.email().default("noreply@closette.test"),
+    MAILTRAP_USE_SANDBOX: z.stringbool().default(false),
+    MAILTRAP_INBOX_ID: z.coerce.number().optional(), // sandbox only
   },
   clientPrefix: "VITE_",
   client: {},

@@ -33,3 +33,15 @@ export const storage = {
 };
 
 export const session = { user: { id: "u1" } };
+
+export const auth = {
+  api: {
+    listUsers: vi.fn(async () => ({ users: [], total: 0 })),
+    getUser: vi.fn(),
+    createUser: vi.fn(async () => ({ user: { id: "u2" } })),
+    adminUpdateUser: vi.fn(async () => ({ id: "u2" })),
+    setUserPassword: vi.fn(async () => ({ status: true })),
+    removeUser: vi.fn(async () => ({ success: true })),
+    requestPasswordReset: vi.fn(async () => ({ status: true })),
+  },
+};

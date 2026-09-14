@@ -46,6 +46,7 @@ export const Route = createFileRoute("/_protected/dashboard")({
 
 function RouteComponent() {
   const { data: session } = authClient.useSession();
+  const { user } = Route.useRouteContext();
   return (
     <div className="flex h-dvh flex-col overflow-y-auto overscroll-none bg-gray-100 pt-14 dark:bg-slate-700">
       <header className="bg-background fixed top-0 right-0 left-0 z-50 flex h-14 w-full grow-0 shadow-xl">
@@ -54,7 +55,10 @@ function RouteComponent() {
         </Link>
         <div className="ml-auto flex flex-row items-center justify-center gap-4 pr-4">
           <ThemeToggle />
-          <UserDropdown userName={session?.user?.name} />
+          <UserDropdown
+            userName={session?.user?.name}
+            isAdmin={user.role === "admin"}
+          />
         </div>
       </header>
       <main className="flex grow flex-col">

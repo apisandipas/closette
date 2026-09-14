@@ -1,6 +1,10 @@
 import { beforeEach, vi } from "vitest";
 
 vi.mock("@/lib/db", async () => ({ db: (await import("./mocks")).db }));
+vi.mock("@/lib/auth", async () => ({ auth: (await import("./mocks")).auth }));
+vi.mock("@tanstack/react-start/server", () => ({
+  getRequestHeaders: () => new Headers(),
+}));
 vi.mock("@/lib/storage", async () => (await import("./mocks")).storage);
 vi.mock("@/lib/auth/functions", async () => {
   const { session } = await import("./mocks");
