@@ -1,4 +1,4 @@
-import { useCreateBrand } from "@/features/brands/api/mutation";
+import { useCreateBrand } from "@/features/brands/api/mutations";
 import { BrandFormValues } from "@/features/brands/api/types";
 import BrandFormModal from "@/features/brands/components/brand-form-modal";
 import { createFileRoute } from "@tanstack/react-router";

@@ -5,7 +5,7 @@ import DataTable, {
   type DataTableSearch,
 } from "@/components/ui/data-table";
 import { useNavigate } from "@tanstack/react-router";
-import { useDeleteBrand } from "../api/mutation";
+import { useDeleteBrand } from "../api/mutations";
 import type { Brand, BrandWithItemCount } from "../api/types";
 
 export type BrandsTableProps = {

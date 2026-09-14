@@ -1,5 +1,5 @@
 import { BrandFormValues } from "@/features/brands/api/form";
-import { useUpdateBrand } from "@/features/brands/api/mutation";
+import { useUpdateBrand } from "@/features/brands/api/mutations";
 import { brandQueryOptions } from "@/features/brands/api/queries";
 import BrandFormModal from "@/features/brands/components/brand-form-modal";
 import { useSuspenseQuery } from "@tanstack/react-query";
