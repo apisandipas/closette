@@ -20,6 +20,7 @@ export const auth = betterAuth({
         user.email,
         "Reset your Closette password",
         `Set a new password here: ${url}\n\nThe link expires in an hour. If you did not ask for this, ignore this email.`,
+        "Password Reset",
       ),
   },
   trustedOrigins: [process.env.BETTER_AUTH_URL!],

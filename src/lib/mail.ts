@@ -13,11 +13,18 @@ const client = new MailtrapClient({
   testInboxId: env.MAILTRAP_INBOX_ID,
 });
 
-export async function sendMail(to: string, subject: string, text: string) {
+// category groups the message in Mailtrap's email logs and stats.
+export async function sendMail(
+  to: string,
+  subject: string,
+  text: string,
+  category?: string,
+) {
   await client.send({
     from: { email: env.MAILTRAP_FROM, name: "Closette" },
     to: [{ email: to }],
     subject,
     text,
+    category,
   });
 }
