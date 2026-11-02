@@ -1,30 +1,42 @@
-// Server only. MAILTRAP_USE_SANDBOX sends into a Mailtrap testing inbox
-// instead of delivering; the SDK needs that inbox's id.
-import { MailtrapClient } from "mailtrap";
+// Server only. Mail goes through Postmark's REST API. POSTMARK_API_KEY is a
+// Postmark server token; the token POSTMARK_API_TEST accepts mail without
+// delivering it.
 import { env } from "@/lib/env";
 
-if (env.MAILTRAP_USE_SANDBOX && !env.MAILTRAP_INBOX_ID) {
-  throw new Error("MAILTRAP_USE_SANDBOX needs MAILTRAP_INBOX_ID");
-}
-
-const client = new MailtrapClient({
-  token: env.MAILTRAP_TOKEN,
-  sandbox: env.MAILTRAP_USE_SANDBOX,
-  testInboxId: env.MAILTRAP_INBOX_ID,
-});
-
-// category groups the message in Mailtrap's email logs and stats.
+// A missing token fails the mail, not the boot. tag groups the message in
+// Postmark's activity and stats.
 export async function sendMail(
   to: string,
   subject: string,
   text: string,
-  category?: string,
+  tag?: string,
 ) {
-  await client.send({
-    from: { email: env.MAILTRAP_FROM, name: "Closette" },
-    to: [{ email: to }],
-    subject,
-    text,
-    category,
+  if (!env.POSTMARK_API_KEY) throw new Error("POSTMARK_API_KEY is not set");
+  const res = await fetch("https://api.postmarkapp.com/email", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      "X-Postmark-Server-Token": env.POSTMARK_API_KEY,
+    },
+    body: JSON.stringify({
+      From: `Closette <${env.MAIL_FROM}>`,
+      To: to,
+      Subject: subject,
+      TextBody: text,
+      Tag: tag,
+      MessageStream: "outbound",
+    }),
+    signal: AbortSignal.timeout(10_000),
   });
+  // Postmark answers errors with { ErrorCode, Message }, 0 meaning success.
+  const body = (await res.json().catch(() => ({}))) as {
+    ErrorCode?: number;
+    Message?: string;
+  };
+  if (!res.ok || (body.ErrorCode ?? 0) !== 0) {
+    throw new Error(
+      `Postmark ${res.status}: ${body.Message ?? "send failed"} (${body.ErrorCode ?? "?"})`,
+    );
+  }
 }
