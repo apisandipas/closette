@@ -87,3 +87,7 @@ Tests cover the server functions in each feature's `api/service.ts`. They run
 in node against a chainable mock of the Drizzle client, so no database is
 needed. CI runs lint, format check, and tests on every push to `main` and
 every pull request.
+
+## License
+
+[MIT](LICENSE)
