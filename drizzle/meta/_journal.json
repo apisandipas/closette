@@ -64,6 +64,13 @@
       "when": 1789413668742,
       "tag": "0008_high_kate_bishop",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793579878249,
+      "tag": "0009_session_impersonated_by",
+      "breakpoints": true
     }
   ]
 }
