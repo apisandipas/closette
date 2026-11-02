@@ -37,9 +37,9 @@ services:
         sync: false
       - key: B2_REGION
         sync: false
-      - key: MAILTRAP_TOKEN
+      - key: POSTMARK_API_KEY
         sync: false
-      - key: MAILTRAP_FROM
+      - key: MAIL_FROM
         sync: false
 
 databases:

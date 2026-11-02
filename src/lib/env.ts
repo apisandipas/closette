@@ -11,10 +11,11 @@ export const env = createEnv({
     B2_BUCKET: z.string(),
     B2_ENDPOINT: z.url(),
     B2_REGION: z.string(),
-    MAILTRAP_TOKEN: z.string(),
-    MAILTRAP_FROM: z.email().default("noreply@closette.test"),
-    MAILTRAP_USE_SANDBOX: z.stringbool().default(false),
-    MAILTRAP_INBOX_ID: z.coerce.number().optional(), // sandbox only
+    // Optional so the app boots without Postmark; sendMail throws when it
+    // is missing.
+    POSTMARK_API_KEY: z.string().optional(),
+    // Must be a sender signature (or on a domain) verified in Postmark.
+    MAIL_FROM: z.email().default("noreply@closette.test"),
   },
   clientPrefix: "VITE_",
   client: {},
